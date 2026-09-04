@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ดอกไม้ — Anniversary</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+</head>
+<body data-page="flower">
+    <!--
+        PAGE 2 — FLOWER
+        Shown right after the password gate unlocks. Bouquet image
+        lives at assets/flowers/bouquet.svg — swap the file (or the
+        src below) to use a real photo/illustration later. The
+        "ไปต่อ →" button hands off to Navigation.goToPage('page3').
+    -->
+    <main class="page">
+        <div class="page-content" data-page-content>
+
+            <div class="flower-bouquet" data-reveal>
+                <img src="../assets/flowers/bouquet.svg" alt="ช่อดอกไม้พาสเทล">
+            </div>
+
+            <h1 class="page-title" data-reveal data-reveal-delay="120">มอบให้สำหรับคนน่ารัก</h1>
+
+            <button type="button" class="btn btn-primary" data-nav-target="page3" data-reveal data-reveal-delay="220">
+                ไปต่อ →
+            </button>
+
+        </div>
+    </main>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/animations.js"></script>
+    <script src="../js/password.js"></script>
+    <script src="../js/main.js"></script>
+</body>
+</html>

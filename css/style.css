@@ -1,187 +1,166 @@
-/* ============================================
-   ไม้ & ข้าว — shared theme
-   ใช้ไฟล์นี้ร่วมกันทุกหน้า แก้สี/ฟอนต์ที่นี่ที่เดียว
-   ============================================ */
+/* =========================================================
+   style.css
+   Global styles: CSS variables (design tokens), typography,
+   color system, base element resets.
 
-:root{
-  --bg:#FAF7F4;
-  --paper:#FFFFFF;
-  --ink:#4A4340;
-  --muted:#9C938D;
-  --sage:#DCE6DD;
-  --sage-line:#B9CCBC;
-  --dusty:#F1DEDB;
-  --dusty-line:#D9B7B2;
-  --line:#EAE3DC;
-}
-*{box-sizing:border-box; margin:0; padding:0;}
-html{scroll-behavior:smooth;}
-body{
-  font-family:'Prompt', sans-serif;
-  background:var(--bg);
-  color:var(--ink);
-  font-weight:300;
-  min-height:100vh;
-}
-h1,h2{font-family:'Mitr', sans-serif; font-weight:500;}
-:focus-visible{outline:2px solid var(--dusty-line); outline-offset:3px; border-radius:4px;}
+   This file is the single source of truth for the site's
+   look and feel. To change the whole theme, change the
+   variables in :root below — avoid hardcoding colors,
+   spacing, or radii anywhere else in the project.
+   ========================================================= */
 
-/* ---------- GATE (index.html) ---------- */
-#gate{
-  position:fixed; inset:0;
-  display:flex; align-items:center; justify-content:center;
-  background:var(--bg);
-  padding:24px;
-}
-.gate-card{
-  max-width:340px;
-  width:100%;
-  text-align:center;
-}
-.gate-card h1{font-size:19px; margin-bottom:8px; font-weight:400;}
-.gate-card p{color:var(--muted); font-size:13.5px; margin-bottom:28px; line-height:1.6;}
-#code-input{
-  width:100%;
-  padding:12px 16px;
-  border-radius:10px;
-  border:1px solid var(--line);
-  background:var(--paper);
-  font-family:'Prompt', sans-serif;
-  font-size:16px;
-  text-align:center;
-  letter-spacing:5px;
-  color:var(--ink);
-  transition:border-color .2s ease;
-}
-#code-input:focus{border-color:var(--dusty-line);}
-#unlock-btn{
-  margin-top:12px;
-  width:100%;
-  padding:12px 16px;
-  border-radius:10px;
-  border:1px solid var(--ink);
-  background:transparent;
-  color:var(--ink);
-  font-family:'Prompt', sans-serif;
-  font-size:14px;
-  font-weight:400;
-  cursor:pointer;
-  transition:background .2s ease, color .2s ease;
-}
-#unlock-btn:hover{background:var(--ink); color:var(--paper);}
-#gate-msg{
-  min-height:18px;
-  margin-top:12px;
-  font-size:12.5px;
-  color:#B98A85;
+@import url('https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Sarabun:wght@300;400;500;600&display=swap');
+
+:root {
+    /* ---- Color palette ----
+       Minimal pastel / cute / clean. Keep this list short
+       (4–6 core colors) and reuse them everywhere. */
+    --color-bg: #FBF6EF;          /* warm cream page background */
+    --color-surface: #FFFFFF;     /* cards, keypad buttons, panels */
+    --color-primary: #E7B8BE;     /* dusty pink — primary actions */
+    --color-secondary: #9CB89A;   /* sage — secondary accents */
+    --color-accent: #C3B6DE;      /* soft lavender — highlights */
+    --color-text: #4A4038;        /* warm dark brown-gray — body text */
+    --color-muted: #9A8F82;       /* muted text, placeholders, hints */
+    --color-error: #C97B7B;       /* soft dusty red — error state only */
+
+    /* ---- Radii ---- */
+    --radius-sm: 8px;
+    --radius-md: 16px;
+    --radius-lg: 28px;
+    --radius-round: 50%;
+
+    /* ---- Shadow ---- */
+    --shadow-soft: 0 8px 24px rgba(74, 64, 56, 0.10);
+    --shadow-softer: 0 4px 12px rgba(74, 64, 56, 0.06);
+
+    /* ---- Transitions ---- */
+    --transition-fast: 150ms ease;
+    --transition-normal: 300ms ease;
+    --transition-slow: 550ms cubic-bezier(0.22, 1, 0.36, 1);
+
+    /* ---- Typography ---- */
+    --font-display: 'Mitr', 'Noto Sans Thai', sans-serif;
+    --font-body: 'Sarabun', 'Noto Sans Thai', sans-serif;
+
+    /* ---- Spacing scale ---- */
+    --space-xs: 8px;
+    --space-sm: 16px;
+    --space-md: 24px;
+    --space-lg: 40px;
+    --space-xl: 64px;
+
+    /* ---- Viewport-aware sizes ----
+       These scale with the viewport's HEIGHT (not width), so a
+       tall stack of elements (illustration + title + dots + a
+       4-row keypad) always fits the visible screen without
+       producing a vertical scrollbar, on short phones and tall
+       screens alike. dvh falls back to vh automatically in any
+       browser that doesn't support it. */
+    --hero-size: clamp(84px, 16dvh, 150px);
+    --keypad-key-size: clamp(46px, 8dvh, 76px);
+    --keypad-gap: clamp(8px, 1.6dvh, 16px);
+    --stack-gap: clamp(10px, 2.2dvh, 24px);
 }
 
-/* ---------- CAT IMAGE (gate) ----------
-   วางไฟล์รูปแมวไว้ที่ assets/images/gate-cat.png (หรือ .gif ถ้าอยากให้ไฟล์ขยับเอง)
-   แล้วแก้ path ใน src ของ <img id="gate-cat"> ในหน้า index.html */
-.cat-icon{
-  width:160px;
-  height:160px;
-  margin:0 auto 20px;
-  display:block;
-  object-fit:cover;
-  border-radius:28px;
-  animation:cat-bob 3.6s ease-in-out infinite;
-}
-.cat-icon.shake{animation:cat-shake .45s ease;}
-.cat-icon.success{animation:cat-pop .5s ease;}
-@keyframes cat-bob{
-  0%,100%{transform:translateY(0);}
-  50%{transform:translateY(-4px);}
-}
-@keyframes cat-shake{
-  0%,100%{transform:translateX(0);}
-  25%{transform:translateX(-5px);}
-  75%{transform:translateX(5px);}
-}
-@keyframes cat-pop{
-  0%{transform:scale(1);}
-  50%{transform:scale(1.1);}
-  100%{transform:scale(1);}
-}
-@media (prefers-reduced-motion: reduce){
-  .cat-icon{animation:none;}
+/* ---- Reset ---- */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
-/* ---------- MAIN PAGE (home.html and future pages) ---------- */
-.page{
-  max-width:560px;
-  margin:0 auto;
-  padding:72px 24px 40px;
-}
-.page section{margin-bottom:96px;}
-
-.hero{text-align:center;}
-.hero .years{
-  font-family:'Mitr', sans-serif;
-  font-weight:500;
-  font-size:clamp(56px, 16vw, 88px);
-  line-height:1;
-  color:var(--ink);
-}
-.hero .years-label{font-size:13px; color:var(--muted); margin-top:6px; letter-spacing:.5px;}
-.hero .names{
-  font-size:clamp(22px, 6vw, 28px);
-  font-weight:400;
-  margin-top:22px;
-  color:var(--ink);
-}
-.hero .names .sep{color:var(--muted); padding:0 10px; font-weight:300;}
-.hero .date{color:var(--muted); font-size:13px; margin-top:6px;}
-.hero .cats{width:170px; margin:40px auto 0; display:block;}
-
-.counter-card{
-  text-align:center;
-  padding:32px 0;
-  border-top:1px solid var(--line);
-  border-bottom:1px solid var(--line);
-}
-.counter-card .num{
-  font-family:'Mitr', sans-serif;
-  font-weight:500;
-  font-size:34px;
-  color:var(--ink);
-}
-.counter-card .cap{font-size:13px; color:var(--muted); margin-top:6px;}
-
-.letter h2{font-size:16px; margin-bottom:20px; color:var(--muted); font-weight:400;}
-.letter p{font-size:15px; line-height:2; color:var(--ink); margin-bottom:16px;}
-.letter p:last-child{margin-bottom:0;}
-.letter .sign{margin-top:24px; font-size:14px; color:var(--muted);}
-
-.reasons h2{font-size:16px; margin-bottom:24px; color:var(--muted); font-weight:400;}
-.reason-list{display:flex; flex-direction:column;}
-.reason{
-  display:flex;
-  align-items:baseline;
-  gap:16px;
-  padding:14px 0;
-  border-bottom:1px solid var(--line);
-}
-.reason:first-child{border-top:1px solid var(--line);}
-.reason .n{font-size:12px; color:var(--muted); font-family:'Mitr', sans-serif; min-width:18px;}
-.reason p{font-size:14.5px; color:var(--ink); line-height:1.6;}
-
-.closing{text-align:center;}
-.closing .cat{width:110px; margin:0 auto 28px; display:block;}
-.closing p{font-size:15px; color:var(--ink); line-height:1.8; margin-bottom:4px;}
-.closing .small{font-size:12px; color:var(--muted); margin-top:20px;}
-
-footer{
-  text-align:center;
-  padding:24px;
-  font-size:11.5px;
-  color:var(--muted);
+html {
+    /* Prevents horizontal scroll from any stray wide element */
+    overflow-x: hidden;
 }
 
-/* ---------- simple page-load fade (used by every page) ---------- */
-.page{animation:page-in .5s ease;}
-@keyframes page-in{
-  from{opacity:0; transform:translateY(6px);}
-  to{opacity:1; transform:translateY(0);}
+body {
+    min-height: 100vh;
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-body);
+    font-weight: 400;
+    line-height: 1.6;
+    font-size: 16px;
+    -webkit-font-smoothing: antialiased;
+}
+
+img {
+    max-width: 100%;
+    display: block;
+}
+
+button {
+    font-family: inherit;
+    border: none;
+    background: none;
+    cursor: pointer;
+    color: inherit;
+}
+
+a {
+    color: inherit;
+    text-decoration: none;
+}
+
+ul {
+    list-style: none;
+}
+
+/* ---- Typography base ---- */
+h1, h2, h3 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    line-height: 1.35;
+}
+
+.page-title {
+    font-size: clamp(1.1rem, 4.4dvh, 1.4rem);
+}
+
+p {
+    max-width: 60ch;
+}
+
+/* ---- Visible keyboard focus (accessibility floor) ---- */
+:focus-visible {
+    outline: 2px solid var(--color-secondary);
+    outline-offset: 3px;
+    border-radius: var(--radius-sm);
+}
+
+/* ---- Respect reduced motion preference ---- */
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+/* ---- Shared page shell ----
+   Every page centers its content in a single-column column
+   that never exceeds a comfortable reading/interaction width. */
+.page {
+    min-height: 100vh;
+    min-height: 100dvh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: clamp(16px, 4dvh, 40px) var(--space-sm);
+}
+
+.page-content {
+    width: 100%;
+    max-width: 360px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    gap: var(--stack-gap);
 }

@@ -1,0 +1,209 @@
+/* =========================================================
+   components.css
+   Reusable UI components: buttons, keypad, password display,
+   flower section, cards. Keep component styles scoped to a
+   single class so they can be reused across pages.
+   ========================================================= */
+
+/* ---- Illustration wrapper (used on any page with a hero image) ---- */
+.illustration {
+    width: var(--hero-size);
+    height: var(--hero-size);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.illustration img,
+.illustration svg {
+    width: 100%;
+    height: 100%;
+}
+
+/* ---- Password display: a row of dots ---- */
+.password-display {
+    display: flex;
+    justify-content: center;
+    gap: var(--space-sm);
+}
+
+.password-dot {
+    width: 16px;
+    height: 16px;
+    border-radius: var(--radius-round);
+    background-color: var(--color-surface);
+    border: 2px solid var(--color-primary);
+    transition: background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.password-dot.is-filled {
+    background-color: var(--color-primary);
+    transform: scale(1.1);
+}
+
+/* Shake feedback for a wrong password */
+.password-display.is-shaking {
+    animation: shake 420ms ease;
+}
+
+@keyframes shake {
+    10%, 90% { transform: translateX(-2px); }
+    20%, 80% { transform: translateX(4px); }
+    30%, 50%, 70% { transform: translateX(-8px); }
+    40%, 60% { transform: translateX(8px); }
+}
+
+/* Feedback message under the password display (no browser alerts) */
+.password-feedback {
+    min-height: 1.4em;
+    font-size: 0.9rem;
+    color: var(--color-error);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.password-feedback.is-visible {
+    opacity: 1;
+}
+
+/* ---- Numeric keypad ----
+   Keys are a fixed, viewport-height-aware size (--keypad-key-size)
+   rather than stretched to fill the container width. This is what
+   keeps the digits from growing huge on wide/short screens and
+   pushing the page taller than the viewport. */
+.keypad {
+    display: grid;
+    grid-template-columns: repeat(3, var(--keypad-key-size));
+    grid-auto-rows: var(--keypad-key-size);
+    gap: var(--keypad-gap);
+    justify-content: center;
+}
+
+.keypad-key {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-softer);
+    font-family: var(--font-display);
+    font-size: clamp(1rem, 3.4dvh, 1.35rem);
+    color: var(--color-text);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.keypad-key:hover {
+    box-shadow: var(--shadow-soft);
+}
+
+.keypad-key:active,
+.keypad-key.is-pressed {
+    transform: scale(0.92);
+}
+
+.keypad-key--action {
+    color: var(--color-secondary);
+}
+
+.keypad-key--confirm {
+    color: var(--color-primary);
+}
+
+/* ---- Buttons ---- */
+.btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    padding: 14px 32px;
+    border-radius: var(--radius-lg);
+    font-family: var(--font-display);
+    font-weight: 500;
+    font-size: 1rem;
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.btn-primary {
+    background-color: var(--color-primary);
+    color: var(--color-surface);
+    box-shadow: var(--shadow-softer);
+}
+
+.btn-primary:hover {
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+}
+
+.btn-primary:active {
+    transform: translateY(0);
+}
+
+/* ---- Flower / bouquet section ---- */
+.flower-bouquet {
+    width: 100%;
+    max-width: 280px;
+}
+
+/* ---- Placeholder page card (page3 and future pages) ---- */
+.placeholder-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
+    color: var(--color-muted);
+}
+
+/* Gentle continuous float, used on hero illustrations */
+.is-floating {
+    animation: floatY 4s ease-in-out infinite;
+}
+
+@keyframes floatY {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+}
+
+/* ---- Generic entrance animation hook ----
+   Elements start hidden via this class; animations.js
+   removes it (or adds .is-visible) to trigger a fade/slide in. */
+.fade-in-element {
+    opacity: 0;
+}
+
+.fade-in-element.is-visible {
+    animation: fadeSlideUp var(--transition-slow) forwards;
+}
+
+@keyframes fadeSlideUp {
+    from {
+        opacity: 0;
+        transform: translateY(16px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Whole-page fade used briefly by navigation.js just before
+   leaving for another page. */
+body.is-page-leaving .page {
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+/* Success unlock animation on the whole password page content */
+.is-unlocking {
+    animation: unlockOut var(--transition-slow) forwards;
+}
+
+@keyframes unlockOut {
+    from {
+        opacity: 1;
+        transform: scale(1);
+    }
+    to {
+        opacity: 0;
+        transform: scale(1.05);
+    }
+}

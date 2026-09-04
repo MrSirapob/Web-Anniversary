@@ -1,0 +1,48 @@
+/* =========================================================
+   responsive.css
+   Mobile-first breakpoints.
+
+   Illustration size, keypad key size, title size, and page
+   padding all scale automatically with viewport HEIGHT via the
+   clamp()-based tokens defined in css/style.css (--hero-size,
+   --keypad-key-size, --stack-gap, .page-title). That's what
+   keeps Page 1 fitting the screen without a scrollbar on short
+   phones — so this file only needs to handle WIDTH: giving the
+   content column more room on tablets and desktops.
+   ========================================================= */
+
+/* ---- Tablet: 768px – 1023px ---- */
+@media (min-width: 768px) {
+    .page-content {
+        max-width: 420px;
+    }
+
+    .flower-bouquet {
+        max-width: 340px;
+    }
+}
+
+/* ---- Desktop: 1024px+ ---- */
+@media (min-width: 1024px) {
+    .page-content {
+        max-width: 460px;
+    }
+
+    .flower-bouquet {
+        max-width: 380px;
+    }
+
+    .btn {
+        padding: 16px 40px;
+    }
+}
+
+/* ---- Orientation safety: short landscape phones ----
+   Height-based sizing already shrinks everything here; this
+   just stops the page from centering content off the top edge
+   when there's barely any vertical space at all. */
+@media (max-height: 420px) and (orientation: landscape) {
+    .page {
+        justify-content: flex-start;
+    }
+}

@@ -1,0 +1,48 @@
+<svg viewBox="0 0 320 320" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Illustration of a bouquet of flowers">
+  <!-- stems -->
+  <path d="M160 210 L145 300" stroke="#9CB89A" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M160 210 L160 300" stroke="#9CB89A" stroke-width="5" stroke-linecap="round" fill="none"/>
+  <path d="M160 210 L176 300" stroke="#9CB89A" stroke-width="5" stroke-linecap="round" fill="none"/>
+
+  <!-- ribbon -->
+  <path d="M132 258 Q160 244 188 258 L182 282 Q160 270 138 282 Z" fill="#E7B8BE"/>
+
+  <!-- leaves -->
+  <path d="M148 200 Q118 195 108 170 Q140 168 152 192 Z" fill="#9CB89A"/>
+  <path d="M172 200 Q202 195 212 170 Q180 168 168 192 Z" fill="#9CB89A"/>
+
+  <!-- flower: dusty pink (left) -->
+  <g transform="translate(112,140)">
+    <circle cx="0" cy="-18" r="16" fill="#E7B8BE"/>
+    <circle cx="-16" cy="6" r="16" fill="#E7B8BE"/>
+    <circle cx="16" cy="6" r="16" fill="#E7B8BE"/>
+    <circle cx="-10" cy="24" r="16" fill="#E7B8BE"/>
+    <circle cx="10" cy="24" r="16" fill="#E7B8BE"/>
+    <circle cx="0" cy="10" r="14" fill="#FBF6EF"/>
+  </g>
+
+  <!-- flower: lavender (center, larger, focal) -->
+  <g transform="translate(160,110)">
+    <circle cx="0" cy="-22" r="20" fill="#C3B6DE"/>
+    <circle cx="-19" cy="8" r="20" fill="#C3B6DE"/>
+    <circle cx="19" cy="8" r="20" fill="#C3B6DE"/>
+    <circle cx="-12" cy="30" r="20" fill="#C3B6DE"/>
+    <circle cx="12" cy="30" r="20" fill="#C3B6DE"/>
+    <circle cx="0" cy="12" r="16" fill="#FBF6EF"/>
+  </g>
+
+  <!-- flower: sage (right) -->
+  <g transform="translate(208,140)">
+    <circle cx="0" cy="-18" r="16" fill="#9CB89A"/>
+    <circle cx="-16" cy="6" r="16" fill="#9CB89A"/>
+    <circle cx="16" cy="6" r="16" fill="#9CB89A"/>
+    <circle cx="-10" cy="24" r="16" fill="#9CB89A"/>
+    <circle cx="10" cy="24" r="16" fill="#9CB89A"/>
+    <circle cx="0" cy="10" r="14" fill="#FBF6EF"/>
+  </g>
+
+  <!-- small filler blossoms -->
+  <circle cx="140" cy="88" r="8" fill="#F3E7E9"/>
+  <circle cx="188" cy="82" r="8" fill="#F3E7E9"/>
+  <circle cx="164" cy="70" r="7" fill="#F3E7E9"/>
+</svg>

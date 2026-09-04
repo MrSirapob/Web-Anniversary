@@ -1,27 +1,62 @@
 <!DOCTYPE html>
 <html lang="th">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>ไม้ & ข้าว</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="css/style.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>รหัสลับ — Anniversary</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/responsive.css">
 </head>
-<body>
+<body data-page="password">
+    <!--
+        PAGE 1 — SECRET PASSWORD
+        Numeric keypad + password dots. Logic lives in js/password.js,
+        the password itself is set in PASSWORD_CONFIG at the top of
+        that file. On a correct password this hands off to
+        Navigation.goToPage('flower', ...).
+    -->
+    <main class="page">
+        <div class="page-content" data-page-content>
 
-<div id="gate">
-  <div class="gate-card">
-    <img id="gate-cat" class="cat-icon" src="assets/images/gate-cat.png" alt="แมว">
-    <h1>รหัสผ่าน</h1>
-    <p>ใส่รหัส 6 หลักเพื่อเข้าดูหน้าครบรอบ</p>
-    <input id="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="• • • • • •" autocomplete="off">
-    <button id="unlock-btn">เข้าดู</button>
-    <div id="gate-msg"></div>
-  </div>
-</div>
+            <div class="illustration" data-reveal>
+                <img src="assets/icons/lock-illustration.svg" alt="กุญแจน่ารักที่ล็อกอยู่">
+            </div>
 
-<script src="js/gate.js"></script>
+            <h1 class="page-title" data-reveal data-reveal-delay="80">ใส่รหัสลับ</h1>
+
+            <div class="password-display" data-password-display data-reveal data-reveal-delay="140">
+                <span class="password-dot"></span>
+                <span class="password-dot"></span>
+                <span class="password-dot"></span>
+                <span class="password-dot"></span>
+                <span class="password-dot"></span>
+                <span class="password-dot"></span>
+            </div>
+
+            <p class="password-feedback" data-password-feedback role="status" aria-live="polite"></p>
+
+            <div class="keypad" data-keypad data-reveal data-reveal-delay="200">
+                <button type="button" class="keypad-key" data-key="1">1</button>
+                <button type="button" class="keypad-key" data-key="2">2</button>
+                <button type="button" class="keypad-key" data-key="3">3</button>
+                <button type="button" class="keypad-key" data-key="4">4</button>
+                <button type="button" class="keypad-key" data-key="5">5</button>
+                <button type="button" class="keypad-key" data-key="6">6</button>
+                <button type="button" class="keypad-key" data-key="7">7</button>
+                <button type="button" class="keypad-key" data-key="8">8</button>
+                <button type="button" class="keypad-key" data-key="9">9</button>
+                <button type="button" class="keypad-key keypad-key--action" data-key="back" aria-label="ลบตัวเลข">⌫</button>
+                <button type="button" class="keypad-key" data-key="0">0</button>
+                <button type="button" class="keypad-key keypad-key--confirm" data-key="confirm" aria-label="ยืนยันรหัส">✓</button>
+            </div>
+
+        </div>
+    </main>
+
+    <script src="js/navigation.js"></script>
+    <script src="js/animations.js"></script>
+    <script src="js/password.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>
