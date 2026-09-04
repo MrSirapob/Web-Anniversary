@@ -123,7 +123,11 @@ const PhotoBooth = (() => {
         card.style.setProperty('--shift', `${layout.shift}px`);
         card.style.setProperty('--drop', `${layout.drop}px`);
         card.style.setProperty('--rot', `${layout.rot}deg`);
-        card.style.zIndex = String(index + 1);
+        // Set via a CSS custom property (not card.style.zIndex)
+        // specifically so the :hover rule in photo.css — a normal
+        // stylesheet declaration — is able to win over it and
+        // bring the hovered print to the front of the stack.
+        card.style.setProperty('--stack-order', String(index + 1));
 
         const img = document.createElement('img');
         img.src = photo.src;
@@ -199,8 +203,8 @@ const PhotoBooth = (() => {
         const closeEls = lightbox.querySelectorAll('[data-lightbox-close]');
 
         closeEls.forEach((el) => el.addEventListener('click', closeLightbox));
-        if (prevBtn) prevBtn.addEventListener('click', () => showLightboxPhoto(lightboxIndex - 1));
-        if (nextBtn) nextBtn.addEventListener('click', () => showLightboxPhoto(lightboxIndex + 1));
+        if (prevBtn) prevBtn.addEventListener('click', () => showLightboxPhoto(lightboxIndex - 1, true));
+        if (nextBtn) nextBtn.addEventListener('click', () => showLightboxPhoto(lightboxIndex + 1, true));
         document.addEventListener('keydown', handleLightboxKeydown);
 
         buildLightboxDots();
@@ -210,17 +214,18 @@ const PhotoBooth = (() => {
         if (!lightbox || !lightbox.classList.contains('is-open')) return;
 
         if (event.key === 'Escape') closeLightbox();
-        if (event.key === 'ArrowLeft') showLightboxPhoto(lightboxIndex - 1);
-        if (event.key === 'ArrowRight') showLightboxPhoto(lightboxIndex + 1);
+        if (event.key === 'ArrowLeft') showLightboxPhoto(lightboxIndex - 1, true);
+        if (event.key === 'ArrowRight') showLightboxPhoto(lightboxIndex + 1, true);
     }
 
     function buildLightboxDots() {
         if (!lightboxDots) return;
         lightboxDots.innerHTML = '';
 
-        PhotoBoothData.photos.forEach(() => {
+        PhotoBoothData.photos.forEach((_, i) => {
             const dot = document.createElement('span');
             dot.className = 'lightbox-dot';
+            dot.addEventListener('click', () => showLightboxPhoto(i, true));
             lightboxDots.appendChild(dot);
         });
     }
@@ -231,15 +236,33 @@ const PhotoBooth = (() => {
         dots.forEach((dot, i) => dot.classList.toggle('is-active', i === lightboxIndex));
     }
 
-    function showLightboxPhoto(index) {
+    function showLightboxPhoto(index, animate) {
         const total = PhotoBoothData.photos.length;
         lightboxIndex = (index + total) % total; // wrap around both ends
 
         const photo = PhotoBoothData.photos[lightboxIndex];
-        if (lightboxImg && photo) {
+        if (!lightboxImg || !photo) {
+            updateLightboxDots();
+            return;
+        }
+
+        if (animate) {
+            // Fade the current image out, swap the src while it's
+            // invisible, then fade the new one back in — avoids an
+            // abrupt jump-cut when moving between photos.
+            lightboxImg.classList.add('is-switching');
+            window.setTimeout(() => {
+                lightboxImg.src = photo.src;
+                lightboxImg.alt = photo.alt || 'ภาพความทรงจำ';
+                window.requestAnimationFrame(() => {
+                    lightboxImg.classList.remove('is-switching');
+                });
+            }, 180);
+        } else {
             lightboxImg.src = photo.src;
             lightboxImg.alt = photo.alt || 'ภาพความทรงจำ';
         }
+
         updateLightboxDots();
     }
 
@@ -249,7 +272,7 @@ const PhotoBooth = (() => {
         // on finish always has all 3 ready.
         if (!lightbox || index >= printedCount) return;
 
-        showLightboxPhoto(index);
+        showLightboxPhoto(index, false);
         lightbox.classList.add('is-open');
         lightbox.setAttribute('aria-hidden', 'false');
     }

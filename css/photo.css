@@ -17,7 +17,7 @@
     display: block;
     width: 100%;
     padding: 0;
-    transition: transform var(--transition-fast);
+    transition: transform 220ms ease;
 }
 
 .camera:active:not(:disabled) {
@@ -26,6 +26,20 @@
 
 .camera:disabled {
     cursor: default;
+}
+
+@media (hover: hover) {
+    .camera:hover:not(:disabled) {
+        transform: translateY(-4px);
+    }
+
+    .camera:hover:not(:disabled) .camera-body {
+        box-shadow: 0 14px 30px rgba(74, 64, 56, 0.16);
+    }
+
+    .camera:hover:not(:disabled) .camera-shutter-btn {
+        transform: scale(1.15);
+    }
 }
 
 .camera-top {
@@ -55,6 +69,7 @@
     height: 11px;
     border-radius: var(--radius-round);
     background-color: var(--color-error);
+    transition: transform 220ms ease;
 }
 
 .camera-body {
@@ -68,6 +83,7 @@
     background-color: var(--color-surface);
     border-radius: var(--radius-lg);
     box-shadow: var(--shadow-soft);
+    transition: box-shadow 220ms ease;
 }
 
 .camera-lens-ring {
@@ -179,20 +195,57 @@
     position: absolute;
     top: 0;
     left: 50%;
-    z-index: 1;
+    /* Resting stack order — set per-card via --stack-order inline
+       (js/photo.js), so later prints naturally sit on top of
+       earlier ones. The :hover/:active rules below override this
+       with a plain stylesheet z-index, which — unlike an inline
+       style — they're able to win against. */
+    z-index: var(--stack-order, 1);
     width: 132px;
     padding: 8px 8px 22px;
     background-color: #FFFFFF;
     border-radius: 6px;
     box-shadow: var(--shadow-soft);
     opacity: 0;
+    /* --hover-lift/--hover-scale default to "resting" so hover can
+       nudge them without fighting the eject transform below. */
+    --hover-lift: 0px;
+    --hover-scale: 1;
     transform: translate(-50%, -36px) rotate(0deg) scale(0.85);
-    transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1), opacity 380ms ease;
+    transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1), opacity 380ms ease, box-shadow 260ms ease;
 }
 
 .polaroid.is-ejecting {
     opacity: 1;
-    transform: translate(calc(-50% + var(--shift, 0px)), var(--drop, 60px)) rotate(var(--rot, 0deg)) scale(1);
+    transform: translate(calc(-50% + var(--shift, 0px)), calc(var(--drop, 60px) + var(--hover-lift)))
+        rotate(var(--rot, 0deg)) scale(var(--hover-scale));
+}
+
+/* Once developed the print motion is done, so hand transform
+   transitions over to a snappier timing meant for hover/press
+   feedback rather than the slow print-eject easing above. */
+.polaroid.is-developed {
+    cursor: pointer;
+    transition: transform 260ms cubic-bezier(0.22, 1, 0.36, 1), opacity 380ms ease, box-shadow 260ms ease;
+}
+
+@media (hover: hover) {
+    .polaroid.is-developed:hover {
+        z-index: 50;
+        --hover-lift: -10px;
+        --hover-scale: 1.06;
+        box-shadow: 0 16px 32px rgba(74, 64, 56, 0.24);
+    }
+
+    .polaroid.is-developed:hover img {
+        filter: grayscale(0) brightness(1.04);
+    }
+}
+
+.polaroid.is-developed:active {
+    z-index: 50;
+    --hover-lift: -2px;
+    --hover-scale: 0.97;
 }
 
 .polaroid img {
@@ -207,6 +260,7 @@
 
 .polaroid.is-developed img {
     filter: grayscale(0) brightness(1);
+    transition: filter 260ms ease;
 }
 
 /* Button that appears once all 3 polaroids have printed */
@@ -221,23 +275,30 @@
     opacity: 1;
     transform: translateY(0);
 }
-
 /* ---- Photo viewer (lightbox) ----
-   Hidden (display: none) until js/photo.js adds .is-open, which
-   also does the fade+scale reveal. Kept as a single fixed
-   overlay outside .page so it always covers the full viewport
-   regardless of where it sits in the page flow. */
+   Uses opacity/visibility (not display:none) so BOTH opening and
+   closing can animate — closeLightbox() just removes .is-open and
+   every child transition below reverses itself automatically. The
+   delayed visibility transition keeps it out of the tab/click
+   order while fully faded out. */
 .photo-lightbox {
-    display: none;
     position: fixed;
     inset: 0;
     z-index: 1000;
+    display: flex;
     align-items: center;
     justify-content: center;
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 320ms ease, visibility 0s linear 320ms;
 }
 
 .photo-lightbox.is-open {
-    display: flex;
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 320ms ease, visibility 0s linear 0s;
 }
 
 .lightbox-backdrop {
@@ -245,12 +306,6 @@
     inset: 0;
     background-color: rgba(74, 64, 56, 0.55);
     backdrop-filter: blur(2px);
-    opacity: 0;
-    transition: opacity var(--transition-normal);
-}
-
-.photo-lightbox.is-open .lightbox-backdrop {
-    opacity: 1;
 }
 
 .lightbox-content {
@@ -270,13 +325,11 @@
     background-color: #FFFFFF;
     border-radius: var(--radius-sm);
     box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
-    opacity: 0;
     transform: scale(0.8) translateY(18px) rotate(-3deg);
-    transition: opacity 380ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .photo-lightbox.is-open .lightbox-frame {
-    opacity: 1;
     transform: scale(1) translateY(0) rotate(0deg);
 }
 
@@ -285,6 +338,16 @@
     aspect-ratio: 1 / 1;
     object-fit: cover;
     border-radius: 2px;
+    /* Crossfade + tiny scale pulse between photos, toggled by
+       js/photo.js via .is-switching around each src change. */
+    opacity: 1;
+    transform: scale(1);
+    transition: opacity 180ms ease, transform 220ms ease;
+}
+
+.lightbox-frame img.is-switching {
+    opacity: 0;
+    transform: scale(0.96);
 }
 
 .lightbox-nav {
@@ -300,19 +363,23 @@
     font-size: 1.5rem;
     line-height: 1;
     opacity: 0;
-    transition: opacity var(--transition-normal), background-color var(--transition-fast), transform var(--transition-fast);
+    transform: scale(1);
+    transition: opacity 260ms ease 80ms, background-color 180ms ease, transform 180ms ease;
 }
 
 .photo-lightbox.is-open .lightbox-nav {
     opacity: 1;
 }
 
-.lightbox-nav:hover {
-    background-color: rgba(255, 255, 255, 0.28);
+.lightbox-nav:active {
+    transform: scale(0.88);
 }
 
-.lightbox-nav:active {
-    transform: scale(0.92);
+@media (hover: hover) {
+    .lightbox-nav:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: scale(1.1);
+    }
 }
 
 .lightbox-dots {
@@ -324,6 +391,12 @@
     justify-content: center;
     gap: 6px;
     width: 100%;
+    opacity: 0;
+    transition: opacity 260ms ease 120ms;
+}
+
+.photo-lightbox.is-open .lightbox-dots {
+    opacity: 1;
 }
 
 .lightbox-dot {
@@ -331,13 +404,20 @@
     height: 6px;
     border-radius: var(--radius-round);
     background-color: rgba(255, 255, 255, 0.4);
-    transition: background-color var(--transition-fast), width var(--transition-fast);
+    cursor: pointer;
+    transition: background-color 180ms ease, width 180ms ease, transform 180ms ease;
 }
 
 .lightbox-dot.is-active {
     width: 16px;
     border-radius: var(--radius-sm);
     background-color: #FFFFFF;
+}
+
+@media (hover: hover) {
+    .lightbox-dot:hover {
+        transform: scale(1.3);
+    }
 }
 
 .lightbox-close {
@@ -356,25 +436,23 @@
     font-size: 1.4rem;
     line-height: 1;
     opacity: 0;
-    transition: opacity var(--transition-normal), background-color var(--transition-fast);
+    transform: rotate(0deg);
+    transition: opacity 260ms ease 80ms, background-color 180ms ease, transform 220ms ease;
 }
 
 .photo-lightbox.is-open .lightbox-close {
     opacity: 1;
 }
 
-.lightbox-close:hover {
-    background-color: rgba(255, 255, 255, 0.28);
+.lightbox-close:active {
+    transform: scale(0.88);
 }
 
-/* Printed polaroids become tappable once developed, as an entry
-   point back into the lightbox viewer. */
-.polaroid.is-developed {
-    cursor: pointer;
-}
-
-.polaroid.is-developed:active {
-    transform: translate(calc(-50% + var(--shift, 0px)), var(--drop, 60px)) rotate(var(--rot, 0deg)) scale(0.96);
+@media (hover: hover) {
+    .lightbox-close:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        transform: rotate(90deg);
+    }
 }
 
 /* ---- Respect reduced motion ---- */
@@ -383,7 +461,18 @@
         animation: none;
     }
 
-    .lightbox-frame {
+    .camera:hover:not(:disabled) {
+        transform: none;
+    }
+
+    .polaroid.is-developed:hover,
+    .polaroid.is-developed:active {
+        --hover-lift: 0px;
+        --hover-scale: 1;
+    }
+
+    .lightbox-frame,
+    .lightbox-close:hover {
         transform: none;
     }
 }
