@@ -46,10 +46,16 @@
                 <button type="button" class="keypad-key" data-key="7">7</button>
                 <button type="button" class="keypad-key" data-key="8">8</button>
                 <button type="button" class="keypad-key" data-key="9">9</button>
-                <button type="button" class="keypad-key keypad-key--action" data-key="back" aria-label="ลบตัวเลข">⌫</button>
+                <span class="keypad-spacer" aria-hidden="true"></span>
                 <button type="button" class="keypad-key" data-key="0">0</button>
-                <button type="button" class="keypad-key keypad-key--confirm" data-key="confirm" aria-label="ยืนยันรหัส">✓</button>
+                <button type="button" class="keypad-key keypad-key--action" data-key="back" aria-label="ลบตัวเลข">
+                    <svg class="keypad-key__icon" viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+                        <path d="M9.5 5h10A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-10a1.5 1.5 0 0 1-1.19-.58L3 12l5.31-6.42A1.5 1.5 0 0 1 9.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                        <path d="M13.5 9.5 18 14M18 9.5l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                    </svg>
+                </button>
             </div>
+
 
         </div>
     </main>

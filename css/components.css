@@ -33,12 +33,18 @@
     border-radius: var(--radius-round);
     background-color: var(--color-surface);
     border: 2px solid var(--color-primary);
-    transition: background-color var(--transition-fast), transform var(--transition-fast);
+    transition: background-color var(--transition-fast), border-color var(--transition-fast);
 }
 
 .password-dot.is-filled {
     background-color: var(--color-primary);
-    transform: scale(1.1);
+    animation: dotPop 260ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes dotPop {
+    0% { transform: scale(0.6); }
+    55% { transform: scale(1.35); }
+    100% { transform: scale(1.1); }
 }
 
 /* Shake feedback for a wrong password */
@@ -46,11 +52,33 @@
     animation: shake 420ms ease;
 }
 
+.password-display.is-shaking .password-dot.is-filled {
+    border-color: var(--color-error);
+    background-color: var(--color-error);
+}
+
 @keyframes shake {
     10%, 90% { transform: translateX(-2px); }
     20%, 80% { transform: translateX(4px); }
     30%, 50%, 70% { transform: translateX(-8px); }
     40%, 60% { transform: translateX(8px); }
+}
+
+/* Lock illustration reacts alongside the dots: a little headshake
+   on wrong password, a relieved bounce+spin on the correct one. */
+.illustration.is-shaking {
+    animation: shake 420ms ease;
+}
+
+.illustration.is-unlocked {
+    animation: lockBounce 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes lockBounce {
+    0% { transform: scale(1) rotate(0deg); }
+    35% { transform: scale(1.18) rotate(-8deg); }
+    65% { transform: scale(0.96) rotate(4deg); }
+    100% { transform: scale(1.06) rotate(0deg); }
 }
 
 /* Feedback message under the password display (no browser alerts) */
@@ -80,9 +108,11 @@
 }
 
 .keypad-key {
+    position: relative;
     display: flex;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
     background-color: var(--color-surface);
     border-radius: var(--radius-md);
     box-shadow: var(--shadow-softer);
@@ -102,11 +132,65 @@
 }
 
 .keypad-key--action {
-    color: var(--color-secondary);
+    background-color: var(--color-surface);
+    box-shadow: var(--shadow-softer);
+    color: var(--color-muted);
 }
 
-.keypad-key--confirm {
-    color: var(--color-primary);
+.keypad-key--action:hover {
+    box-shadow: var(--shadow-soft);
+    color: var(--color-error);
+}
+
+.keypad-key--action:active,
+.keypad-key--action.is-pressed {
+    color: var(--color-error);
+}
+
+.keypad-key__icon {
+    display: block;
+    width: clamp(18px, 3.4dvh, 24px);
+    height: clamp(18px, 3.4dvh, 24px);
+    transition: transform var(--transition-fast);
+}
+
+.keypad-key--action:active .keypad-key__icon,
+.keypad-key--action.is-pressed .keypad-key__icon {
+    transform: translateX(-2px);
+}
+
+/* Empty grid cell so the "0" key stays visually centered under
+   the 8, matching a familiar phone-keypad layout now that there's
+   no confirm key on the last row. */
+.keypad-spacer {
+    width: var(--keypad-key-size);
+    height: var(--keypad-key-size);
+}
+
+/* Soft circular ripple dropped in at the tap point by password.js.
+   Removed automatically once its animation ends. */
+.keypad-ripple {
+    position: absolute;
+    width: 12px;
+    height: 12px;
+    border-radius: var(--radius-round);
+    background-color: var(--color-primary);
+    opacity: 0.35;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(0);
+    animation: rippleOut 480ms ease-out forwards;
+}
+
+.keypad-key--action .keypad-ripple {
+    background-color: var(--color-muted);
+    opacity: 0.25;
+}
+
+@keyframes rippleOut {
+    to {
+        transform: translate(-50%, -50%) scale(9);
+        opacity: 0;
+    }
 }
 
 /* ---- Buttons ---- */
@@ -205,5 +289,41 @@ body.is-page-leaving .page {
     to {
         opacity: 0;
         transform: scale(1.05);
+    }
+}
+
+/* ---- Heart burst (correct password) ----
+   A fixed, full-viewport, click-through layer that password.js
+   fills with a handful of little hearts, then clears once they've
+   finished floating up and fading out. */
+.heart-burst {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 20;
+}
+
+.heart-burst-piece {
+    position: absolute;
+    bottom: 8%;
+    font-size: var(--heart-size, 20px);
+    color: var(--color-primary);
+    opacity: 0;
+    animation: heartFloat 1100ms ease-out forwards;
+    animation-delay: var(--heart-delay, 0ms);
+}
+
+@keyframes heartFloat {
+    0% {
+        opacity: 0;
+        transform: translateY(0) scale(0.6) rotate(var(--heart-rotate, 0deg));
+    }
+    15% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(-60vh) scale(1) rotate(var(--heart-rotate, 0deg));
     }
 }

@@ -26,6 +26,7 @@ const PasswordGate = (() => {
             feedback: document.querySelector('[data-password-feedback]'),
             keypad: document.querySelector('[data-keypad]'),
             pageContent: document.querySelector('[data-page-content]'),
+            illustration: document.querySelector('.illustration'),
         };
 
         if (!els.display || !els.keypad) {
@@ -49,8 +50,23 @@ const PasswordGate = (() => {
         els.keypad.addEventListener('click', (event) => {
             const key = event.target.closest('[data-key]');
             if (!key || isLocked) return;
+            spawnRipple(key, event);
             handleKey(key.dataset.key);
         });
+    }
+
+    /**
+     * Drops a small expanding circle at the tap/click position
+     * inside a keypad key, purely decorative, self-removing.
+     */
+    function spawnRipple(key, event) {
+        const rect = key.getBoundingClientRect();
+        const ripple = document.createElement('span');
+        ripple.className = 'keypad-ripple';
+        ripple.style.left = `${event.clientX - rect.left}px`;
+        ripple.style.top = `${event.clientY - rect.top}px`;
+        key.appendChild(ripple);
+        ripple.addEventListener('animationend', () => ripple.remove());
     }
 
     function bindKeyboard() {
@@ -62,7 +78,7 @@ const PasswordGate = (() => {
             } else if (event.key === 'Backspace') {
                 handleKey('back');
             } else if (event.key === 'Enter') {
-                handleKey('confirm');
+                checkPassword();
             }
         });
     }
@@ -71,11 +87,6 @@ const PasswordGate = (() => {
         if (key === 'back') {
             currentInput = currentInput.slice(0, -1);
             renderDots();
-            return;
-        }
-
-        if (key === 'confirm') {
-            checkPassword();
             return;
         }
 
@@ -105,13 +116,23 @@ const PasswordGate = (() => {
         isLocked = true;
         showFeedback('');
 
-        if (els.pageContent) {
-            els.pageContent.classList.add('is-unlocking');
+        if (els.illustration) {
+            els.illustration.classList.add('is-unlocked');
+        }
+
+        if (window.Animations && typeof Animations.burstHearts === 'function') {
+            Animations.burstHearts();
         }
 
         window.setTimeout(() => {
+            if (els.pageContent) {
+                els.pageContent.classList.add('is-unlocking');
+            }
+        }, 250);
+
+        window.setTimeout(() => {
             Navigation.goToPage('flower', { gateUnlocked: true });
-        }, 500);
+        }, 700);
     }
 
     function handleWrongPassword() {
@@ -119,9 +140,15 @@ const PasswordGate = (() => {
         showFeedback('รหัสไม่ถูกต้อง ลองอีกครั้งนะ');
 
         els.display.classList.add('is-shaking');
+        if (els.illustration) {
+            els.illustration.classList.add('is-shaking');
+        }
 
         window.setTimeout(() => {
             els.display.classList.remove('is-shaking');
+            if (els.illustration) {
+                els.illustration.classList.remove('is-shaking');
+            }
             currentInput = '';
             renderDots();
             isLocked = false;
