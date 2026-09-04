@@ -40,8 +40,8 @@ const PhotoBooth = (() => {
     // how many photos have printed so far (1-indexed by shots
     // taken). Falls back to a generic line if a count has none.
     const SHOT_HINTS = {
-        1: 'ใบแรกมาแล้ว เหลืออีก 2 ใบ ถ่ายต่อเลย',
-        2: 'ใบที่ 2 แล้ว เหลืออีก 1 ใบ',
+        1: 'เหลืออีก 2 ใบ ถ่ายต่อเลย',
+        2: 'เหลืออีก 1 ใบ',
     };
 
     let cameraBtn = null;
@@ -76,7 +76,7 @@ const PhotoBooth = (() => {
         if (isBusy || printedCount >= PhotoBoothData.photos.length) return;
         isBusy = true;
         cameraBtn.classList.add('is-shaking');
-        if (hint) hint.textContent = 'เดี๋ยวก่อนนะ...';
+        if (hint) hint.textContent = 'รอสักครู่นะ...';
 
         triggerFlash();
 
