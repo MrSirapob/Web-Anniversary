@@ -17,6 +17,7 @@ const Navigation = (() => {
         home: 'index.html',
         flower: 'pages/flower.html',
         page3: 'pages/page3.html',
+        quiz: 'pages/quiz.html',
     };
 
     // Because pages/*.html live one folder below the root, a root-

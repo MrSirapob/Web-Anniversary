@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>คำถามท้ายเรื่อง — Anniversary</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/quiz.css">
+</head>
+<body data-page="quiz">
+    <!--
+        PAGE 4 — QUIZ
+        Reached from Page 3's chat once the conversation ends
+        (the "ไปต่อ →" button there hands off here via
+        Navigation.goToPage('quiz')). 3 questions, 4 options
+        each, one question shown at a time. Content lives in
+        js/quiz-data.js (edit that file to change the questions
+        or answer choices) — rendering/transition logic lives in
+        js/quiz.js. This file only holds the empty shell those
+        scripts render into.
+    -->
+    <main class="page">
+        <div class="page-content" data-page-content>
+
+            <div class="quiz-progress" data-quiz-progress data-reveal></div>
+
+            <div class="quiz-card" data-quiz-card data-reveal data-reveal-delay="100"></div>
+
+        </div>
+    </main>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/animations.js"></script>
+    <script src="../js/password.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/quiz-data.js"></script>
+    <script src="../js/quiz.js"></script>
+</body>
+</html>

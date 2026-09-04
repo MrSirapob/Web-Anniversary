@@ -49,8 +49,11 @@ const ChatStory = (() => {
             playIncomingMessage(node.text, () => processNode(node.next));
         } else if (node.type === 'choice') {
             renderOptions(node.options);
+        } else if (node.type === 'end' && node.nextPage) {
+            renderContinueButton(node.nextPage, node.label);
         }
-        // node.type === 'end' → nothing further to render right now.
+        // node.type === 'end' with no nextPage → nothing further to
+        // render right now.
     }
 
     function playIncomingMessage(text, onDone) {
@@ -115,6 +118,32 @@ const ChatStory = (() => {
             btn.addEventListener('click', () => handleOptionPicked(option, wrap));
             wrap.appendChild(btn);
         });
+
+        host.appendChild(wrap);
+        revealNextFrame(wrap);
+        scrollToBottom();
+    }
+
+    // The conversation has nothing further to say right now, but
+    // it can still hand off to another page (e.g. Page 3 → the
+    // anniversary quiz) via a single, differently-styled CTA
+    // button in the same dock the reply options use.
+    function renderContinueButton(pageKey, label) {
+        const host = chatDock || chatWindow;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'chat-options';
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chat-option-btn chat-option-btn--cta';
+        btn.textContent = label || 'ไปต่อ →';
+        btn.addEventListener('click', () => {
+            if (typeof Navigation === 'undefined') return;
+            btn.disabled = true;
+            Navigation.goToPage(pageKey);
+        });
+        wrap.appendChild(btn);
 
         host.appendChild(wrap);
         revealNextFrame(wrap);

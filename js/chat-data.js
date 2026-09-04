@@ -15,8 +15,12 @@
        is added to the chat as an outgoing bubble, then the story
        continues from that option's `next`.
 
-     { type: 'end' }
-       The conversation has nothing further right now.
+     { type: 'end', nextPage, label }
+       The conversation has nothing further right now. If nextPage
+       is set (a key from Navigation.PAGES), a single call-to-action
+       button appears in the reply dock — tapping it hands off to
+       that page via Navigation.goToPage instead of continuing the
+       chat. `label` is the button text (defaults to "ไปต่อ →").
 
    Branches are free to lead anywhere, including back into the
    same shared node id — that's how a branch "returns" to the
@@ -62,6 +66,6 @@ const ChatStoryData = {
         n8: { type: 'message', side: 'in', text: 'เลยทำอะไรให้อย่างนึง', next: 'n9' },
         n9: { type: 'message', side: 'in', text: 'อยากให้ดูด้วยกันนะ', next: 'end' },
 
-        end: { type: 'end' },
+        end: { type: 'end', nextPage: 'quiz', label: 'ไปต่อ →' },
     },
 };

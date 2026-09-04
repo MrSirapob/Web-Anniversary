@@ -234,6 +234,26 @@
     transform: translateY(4px) scale(0.98);
 }
 
+/* ---- Continue CTA ----
+   Shown instead of reply options once the conversation reaches
+   an `end` node with a nextPage — a single, solid, centered
+   button so it reads as "move forward" rather than "reply". */
+.chat-option-btn--cta {
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
+    color: var(--color-surface);
+    text-align: center;
+    font-family: var(--font-display);
+    font-weight: 500;
+    box-shadow: var(--shadow-softer);
+}
+
+.chat-option-btn--cta:hover {
+    background-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+    transform: translateY(-1px);
+}
+
 /* ---- Decorative floating hearts ----
    A handful of very quiet, fixed decorations. Not tied to the
    conversation logic, kept few and low-opacity on purpose. */
