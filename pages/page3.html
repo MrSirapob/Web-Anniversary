@@ -3,33 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>เร็ว ๆ นี้ — Anniversary</title>
+    <title>บทสนทนา — Anniversary</title>
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/chat.css">
 </head>
 <body data-page="page3">
     <!--
-        PAGE 3 — PLACEHOLDER
-        This page intentionally has no real content yet. It exists
-        so the navigation flow (password -> flower -> page3) works
-        end-to-end. Replace the content inside .placeholder-card
-        with the next real page (e.g. Memories, Photo Gallery,
-        Timeline...) — keep using .page / .page-content / data-reveal
-        so it stays visually consistent with the rest of the site.
+        PAGE 3 — CHAT STORY
+        A branching chat conversation, not a static placeholder.
+        Content lives in js/chat-data.js (edit that file to change
+        the story). Rendering/typing-indicator/branching logic lives
+        in js/chat.js. This file only holds the empty chat window
+        that those scripts render into — no message text belongs here.
     -->
-    <main class="page">
-        <div class="page-content" data-page-content>
-            <div class="placeholder-card" data-reveal>
-                <h1 class="page-title">กำลังจะมาเร็ว ๆ นี้</h1>
-                <p>หน้านี้ยังไม่มีเนื้อหา — พร้อมสำหรับการเพิ่มฟีเจอร์ต่อไป</p>
-            </div>
+    <div class="chat-page">
+        <div class="chat-decor" aria-hidden="true">
+            <span class="chat-decor-heart chat-decor-heart--1">♡</span>
+            <span class="chat-decor-heart chat-decor-heart--2">♡</span>
+            <span class="chat-decor-heart chat-decor-heart--3">♡</span>
         </div>
-    </main>
+
+        <div class="chat-frame">
+            <div class="chat-window" data-chat-window role="log" aria-live="polite" aria-label="บทสนทนา"></div>
+            <div class="chat-options-dock" data-chat-dock></div>
+        </div>
+    </div>
 
     <script src="../js/navigation.js"></script>
     <script src="../js/animations.js"></script>
     <script src="../js/password.js"></script>
     <script src="../js/main.js"></script>
+    <script src="../js/chat-data.js"></script>
+    <script src="../js/chat.js"></script>
 </body>
 </html>

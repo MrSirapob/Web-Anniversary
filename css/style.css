@@ -24,6 +24,12 @@
     --color-muted: #9A8F82;       /* muted text, placeholders, hints */
     --color-error: #C97B7B;       /* soft dusty red — error state only */
 
+    /* Chat bubble colors (Page 3). Kept as their own tokens so the
+       chat can lean less on pink than the rest of the site while
+       still reading as part of the same pastel family. */
+    --color-bubble-in: #FFFFFF;      /* incoming message bubble */
+    --color-bubble-out: #E9EFE5;     /* outgoing (chosen) bubble — soft sage tint */
+
     /* ---- Radii ---- */
     --radius-sm: 8px;
     --radius-md: 16px;

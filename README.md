@@ -11,7 +11,7 @@ index.html (รหัสลับ)
       ↓ ใส่รหัสถูก
 pages/flower.html (ช่อดอกไม้)
       ↓ กดปุ่ม "ไปต่อ →"
-pages/page3.html (Placeholder)
+pages/page3.html (บทสนทนาแบบแชท พร้อมตัวเลือก/แตกแขนง)
 ```
 
 ## โครงสร้างโฟลเดอร์
@@ -21,16 +21,19 @@ anniversary-web/
 ├── index.html            หน้ารหัสลับ (หน้าแรก)
 ├── pages/
 │   ├── flower.html       หน้าช่อดอกไม้
-│   └── page3.html        หน้า placeholder รอเพิ่มเนื้อหา
+│   └── page3.html        หน้าบทสนทนาแบบแชท (Chat Story)
 ├── css/
 │   ├── style.css         CSS variables, typography, base
 │   ├── components.css    Keypad, ปุ่ม, password display, ฯลฯ
-│   └── responsive.css    Breakpoint: mobile / tablet / desktop
+│   ├── responsive.css    Breakpoint: mobile / tablet / desktop
+│   └── chat.css          สไตล์ UI แชท — ใช้เฉพาะหน้า page3.html
 ├── js/
 │   ├── main.js           Initialize ทุกอย่าง, bind ปุ่มนำทางทั่วไป
 │   ├── password.js        Logic ของหน้ารหัสลับทั้งหมด
 │   ├── navigation.js      แผนที่หน้าเว็บ + การเปลี่ยนหน้า
-│   └── animations.js      Fade / slide / floating ที่ใช้ซ้ำได้
+│   ├── animations.js      Fade / slide / floating ที่ใช้ซ้ำได้
+│   ├── chat-data.js       เนื้อเรื่องบทสนทนา page3 (ข้อความ/ตัวเลือก/แตกแขนง)
+│   └── chat.js            Engine ที่ render แชทจาก chat-data.js — ใช้เฉพาะ page3.html
 ├── assets/
 │   ├── images/            รูปภาพทั่วไป (ยังว่าง)
 │   ├── icons/              ไอคอน/ภาพประกอบ เช่น lock-illustration.svg
@@ -73,6 +76,35 @@ const PASSWORD_CONFIG = {
   ถ้ารูปใหม่มีสัดส่วนต่างจากเดิมมาก อาจต้องปรับ `.flower-bouquet` ใน `css/components.css` เล็กน้อย
 
 ไม่ต้องแก้ JavaScript ใด ๆ เพื่อเปลี่ยนรูป — แก้แค่ path ใน HTML หรือแทนที่ไฟล์ในชื่อเดิมก็พอ
+
+## วิธีแก้ไขบทสนทนาในหน้า 3 (Chat Story)
+
+เนื้อเรื่องทั้งหมดอยู่ใน `js/chat-data.js` แยกออกจาก UI โดยสิ้นเชิง (ไม่ต้องแตะ `js/chat.js` เลย):
+
+```javascript
+const ChatStoryData = {
+    start: 'n1',          // node แรกที่จะเล่น
+    nodes: {
+        n1: { type: 'message', side: 'in', text: 'เธออยู่ไหม', next: 'n2' },
+        // ...
+        n3: {
+            type: 'choice',
+            options: [
+                { text: 'มีเรื่องอะไรเหรอ', next: 'n4a' },
+                // สูงสุดตามที่ต้องการ ไม่จำกัดแค่ 3
+            ],
+        },
+        end: { type: 'end' },
+    },
+};
+```
+
+- **เพิ่มข้อความใหม่**: เพิ่ม node ชนิด `message` แล้วให้ node ก่อนหน้าชี้มาที่ id นี้ผ่าน `next`
+- **เพิ่มจุดให้เลือก**: ใช้ node ชนิด `choice` — แต่ละ option มี `text` (ข้อความบนปุ่ม) และ `next` (จะไปต่อที่ node ไหน)
+- **แตกแขนงแล้ววนกลับเข้าเนื้อเรื่องหลัก**: ให้ทุก option (หรือทุกแขนง) ที่ต้องการให้บรรจบกัน ชี้ `next` ไปที่ node id เดียวกัน (ดูตัวอย่าง `n4a` / `n4b` / `n4c` ที่ทั้งหมดไปต่อที่ `n5`)
+- **จบบทสนทนา**: ชี้ `next` ไปที่ node ชนิด `end` (หรือสร้าง id ใหม่ที่เป็น `{ type: 'end' }`)
+
+ไม่ต้อง hardcode ข้อความหรือ logic ไว้ใน `page3.html` — ไฟล์นั้นมีแค่กล่องแชทว่าง ๆ ให้ `chat.js` render ใส่เท่านั้น
 
 ## วิธีเพิ่มหน้าใหม่
 
