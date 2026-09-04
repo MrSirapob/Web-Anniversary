@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ไม้ & ข้าว</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Mitr:wght@400;500;600&family=Prompt:wght@300;400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<div id="gate">
+  <div class="gate-card">
+    <img id="gate-cat" class="cat-icon" src="assets/images/gate-cat.png" alt="แมว">
+    <h1>รหัสผ่าน</h1>
+    <p>ใส่รหัส 6 หลักเพื่อเข้าดูหน้าครบรอบ</p>
+    <input id="code-input" type="text" inputmode="numeric" maxlength="6" placeholder="• • • • • •" autocomplete="off">
+    <button id="unlock-btn">เข้าดู</button>
+    <div id="gate-msg"></div>
+  </div>
+</div>
+
+<script src="js/gate.js"></script>
+</body>
+</html>
