@@ -1,0 +1,389 @@
+/* =========================================================
+   photo.css
+   Page-photo-only styles. Loaded only by pages/photo.html, so
+   no other page is affected by anything in this file. The
+   camera is drawn entirely with CSS (no image asset needed) so
+   its colors stay in sync with the site's design tokens.
+   ========================================================= */
+
+/* ---- Camera ---- */
+.camera-wrap {
+    width: 210px;
+    max-width: 70vw;
+}
+
+.camera {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    transition: transform var(--transition-fast);
+}
+
+.camera:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+.camera:disabled {
+    cursor: default;
+}
+
+.camera-top {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 24px;
+    margin: 0 16px;
+    padding: 0 12px;
+    background-color: var(--color-surface);
+    border-radius: 10px 10px 0 0;
+    box-shadow: var(--shadow-softer);
+}
+
+.camera-viewfinder {
+    width: 18px;
+    height: 9px;
+    border-radius: 2px;
+    background-color: var(--color-text);
+    opacity: 0.7;
+}
+
+.camera-shutter-btn {
+    width: 11px;
+    height: 11px;
+    border-radius: var(--radius-round);
+    background-color: var(--color-error);
+}
+
+.camera-body {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 14px;
+    padding: 24px 18px 30px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-lg);
+    box-shadow: var(--shadow-soft);
+}
+
+.camera-lens-ring {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 80px;
+    height: 80px;
+    border-radius: var(--radius-round);
+    background-color: var(--color-text);
+    box-shadow: inset 0 0 0 5px rgba(255, 255, 255, 0.1);
+}
+
+.camera-lens-inner {
+    position: relative;
+    width: 56px;
+    height: 56px;
+    overflow: hidden;
+    border-radius: var(--radius-round);
+    background: radial-gradient(circle at 35% 30%, #5a4f43, #2b2620 72%);
+}
+
+.camera-lens-glare {
+    position: absolute;
+    top: 9px;
+    left: 11px;
+    width: 16px;
+    height: 9px;
+    border-radius: var(--radius-round);
+    background-color: rgba(255, 255, 255, 0.4);
+    transform: rotate(-30deg);
+}
+
+.camera-stripe {
+    width: 100%;
+    height: 8px;
+    border-radius: var(--radius-sm);
+    background: linear-gradient(
+        90deg,
+        var(--color-primary) 0% 25%,
+        var(--color-accent) 25% 50%,
+        var(--color-secondary) 50% 75%,
+        #F3D9A4 75% 100%
+    );
+}
+
+.camera-slot {
+    position: absolute;
+    bottom: -6px;
+    left: 50%;
+    z-index: 0;
+    width: 98px;
+    height: 12px;
+    border-radius: 3px;
+    background-color: var(--color-text);
+    opacity: 0.85;
+    transform: translateX(-50%);
+}
+
+/* Little shutter-press shake, played right when a shot is taken */
+.camera.is-shaking {
+    animation: cameraShake 360ms ease;
+}
+
+@keyframes cameraShake {
+    10%, 90% { transform: translateX(-1px) rotate(-0.4deg); }
+    20%, 80% { transform: translateX(2px) rotate(0.4deg); }
+    30%, 50%, 70% { transform: translateX(-3px); }
+    40%, 60% { transform: translateX(3px); }
+}
+
+/* Full-screen flash overlay, created/removed by js/photo.js */
+.camera-flash {
+    position: fixed;
+    inset: 0;
+    z-index: 999;
+    background-color: #FFFFFF;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 110ms ease;
+}
+
+.camera-flash.is-active {
+    opacity: 0.92;
+}
+
+/* ---- Hint text ---- */
+.photo-hint {
+    font-size: 0.9rem;
+    color: var(--color-muted);
+    min-height: 1.4em;
+    transition: opacity var(--transition-fast);
+}
+
+/* ---- Printed polaroid stack ----
+   Each .polaroid is positioned absolutely, centered under the
+   camera's print slot, and animated to its resting spot via
+   the --shift / --drop / --rot custom properties set inline by
+   js/photo.js — that's what fans the 3 prints out unevenly
+   instead of stacking them in an identical pile. */
+.polaroid-stack {
+    position: relative;
+    width: 100%;
+    min-height: 190px;
+    margin-top: -4px;
+}
+
+.polaroid {
+    position: absolute;
+    top: 0;
+    left: 50%;
+    z-index: 1;
+    width: 132px;
+    padding: 8px 8px 22px;
+    background-color: #FFFFFF;
+    border-radius: 6px;
+    box-shadow: var(--shadow-soft);
+    opacity: 0;
+    transform: translate(-50%, -36px) rotate(0deg) scale(0.85);
+    transition: transform 640ms cubic-bezier(0.22, 1, 0.36, 1), opacity 380ms ease;
+}
+
+.polaroid.is-ejecting {
+    opacity: 1;
+    transform: translate(calc(-50% + var(--shift, 0px)), var(--drop, 60px)) rotate(var(--rot, 0deg)) scale(1);
+}
+
+.polaroid img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 2px;
+    background-color: var(--color-bg);
+    filter: grayscale(0.2) brightness(0.85);
+    transition: filter 900ms ease 120ms;
+}
+
+.polaroid.is-developed img {
+    filter: grayscale(0) brightness(1);
+}
+
+/* Button that appears once all 3 polaroids have printed */
+.photo-home-btn {
+    margin-top: var(--space-sm);
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+.photo-home-btn.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ---- Photo viewer (lightbox) ----
+   Hidden (display: none) until js/photo.js adds .is-open, which
+   also does the fade+scale reveal. Kept as a single fixed
+   overlay outside .page so it always covers the full viewport
+   regardless of where it sits in the page flow. */
+.photo-lightbox {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    align-items: center;
+    justify-content: center;
+}
+
+.photo-lightbox.is-open {
+    display: flex;
+}
+
+.lightbox-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(74, 64, 56, 0.55);
+    backdrop-filter: blur(2px);
+    opacity: 0;
+    transition: opacity var(--transition-normal);
+}
+
+.photo-lightbox.is-open .lightbox-backdrop {
+    opacity: 1;
+}
+
+.lightbox-content {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    width: 100%;
+    padding: 0 var(--space-sm);
+}
+
+.lightbox-frame {
+    width: min(78vw, 300px);
+    padding: 14px 14px 30px;
+    background-color: #FFFFFF;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    opacity: 0;
+    transform: scale(0.8) translateY(18px) rotate(-3deg);
+    transition: opacity 380ms ease, transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-lightbox.is-open .lightbox-frame {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+}
+
+.lightbox-frame img {
+    width: 100%;
+    aspect-ratio: 1 / 1;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.lightbox-nav {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    width: 40px;
+    height: 40px;
+    border-radius: var(--radius-round);
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #FFFFFF;
+    font-size: 1.5rem;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity var(--transition-normal), background-color var(--transition-fast), transform var(--transition-fast);
+}
+
+.photo-lightbox.is-open .lightbox-nav {
+    opacity: 1;
+}
+
+.lightbox-nav:hover {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+.lightbox-nav:active {
+    transform: scale(0.92);
+}
+
+.lightbox-dots {
+    position: absolute;
+    bottom: calc(var(--space-lg) + 6px);
+    left: 0;
+    z-index: 1;
+    display: flex;
+    justify-content: center;
+    gap: 6px;
+    width: 100%;
+}
+
+.lightbox-dot {
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-round);
+    background-color: rgba(255, 255, 255, 0.4);
+    transition: background-color var(--transition-fast), width var(--transition-fast);
+}
+
+.lightbox-dot.is-active {
+    width: 16px;
+    border-radius: var(--radius-sm);
+    background-color: #FFFFFF;
+}
+
+.lightbox-close {
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    z-index: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-round);
+    background-color: rgba(255, 255, 255, 0.16);
+    color: #FFFFFF;
+    font-size: 1.4rem;
+    line-height: 1;
+    opacity: 0;
+    transition: opacity var(--transition-normal), background-color var(--transition-fast);
+}
+
+.photo-lightbox.is-open .lightbox-close {
+    opacity: 1;
+}
+
+.lightbox-close:hover {
+    background-color: rgba(255, 255, 255, 0.28);
+}
+
+/* Printed polaroids become tappable once developed, as an entry
+   point back into the lightbox viewer. */
+.polaroid.is-developed {
+    cursor: pointer;
+}
+
+.polaroid.is-developed:active {
+    transform: translate(calc(-50% + var(--shift, 0px)), var(--drop, 60px)) rotate(var(--rot, 0deg)) scale(0.96);
+}
+
+/* ---- Respect reduced motion ---- */
+@media (prefers-reduced-motion: reduce) {
+    .camera.is-shaking {
+        animation: none;
+    }
+
+    .lightbox-frame {
+        transform: none;
+    }
+}

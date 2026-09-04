@@ -108,17 +108,18 @@ const Quiz = (() => {
         scoreLine.textContent = `${score}/${total} ${message}`;
         block.appendChild(scoreLine);
 
-        // Default hand-off is back home — change data-nav-target
-        // (or point it at a new page added to Navigation.PAGES)
-        // once there's somewhere further for the quiz to lead.
+        // Hands off to the photo booth page (pages/photo.html) —
+        // change the goToPage target here (or point it at a new
+        // page added to Navigation.PAGES) if the quiz should lead
+        // somewhere else later.
         const btn = document.createElement('button');
         btn.type = 'button';
         btn.className = 'btn btn-primary';
-        btn.textContent = 'กลับหน้าแรก';
+        btn.textContent = 'ไปต่อ →';
         btn.addEventListener('click', () => {
             if (typeof Navigation === 'undefined') return;
             btn.disabled = true;
-            Navigation.goToPage('home');
+            Navigation.goToPage('photo');
         });
         block.appendChild(btn);
 

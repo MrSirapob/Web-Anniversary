@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ถ่ายรูปกัน — Anniversary</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/photo.css">
+</head>
+<body data-page="photo">
+    <!--
+        PAGE 5 — PHOTO BOOTH
+        Reached from the Quiz page's finish card once all 3
+        questions are answered (Quiz hands off here via
+        Navigation.goToPage('photo')). Shows just the heading
+        and a tappable instant camera. Each tap plays a
+        shutter-flash animation and prints ONE polaroid — the
+        person taps the shutter 3 separate times to print all 3.
+        The photos are NOT taken live, they're fixed images
+        pulled from PhotoBoothData below. Once all 3 have
+        printed, js/photo.js auto-opens the lightbox below with
+        a zoom/fade reveal (also re-openable afterward by
+        tapping any printed polaroid).
+
+        To swap which photos print: edit the `src` values in
+        js/photo.js (PhotoBoothData.photos), or simply replace
+        the files at assets/images/photo-1.svg / photo-2.svg /
+        photo-3.svg with real photos of the same filenames (any
+        image format works — just update the src if the
+        extension changes). No other file needs to change.
+
+        Rendering/animation logic lives in js/photo.js. This
+        file only holds the empty camera + print-stack shell
+        that script renders into.
+    -->
+    <main class="page">
+        <div class="page-content" data-page-content>
+
+            <h1 class="page-title" data-reveal>ไปถ่ายรูปกัน</h1>
+
+            <div class="camera-wrap" data-reveal data-reveal-delay="120">
+                <button type="button" class="camera" data-camera-btn aria-label="แตะเพื่อถ่ายรูป">
+                    <span class="camera-top">
+                        <span class="camera-viewfinder" aria-hidden="true"></span>
+                        <span class="camera-shutter-btn" aria-hidden="true"></span>
+                    </span>
+                    <span class="camera-body">
+                        <span class="camera-lens-ring" aria-hidden="true">
+                            <span class="camera-lens-inner">
+                                <span class="camera-lens-glare"></span>
+                            </span>
+                        </span>
+                        <span class="camera-stripe" aria-hidden="true"></span>
+                    </span>
+                    <span class="camera-slot" aria-hidden="true"></span>
+                </button>
+            </div>
+
+            <p class="photo-hint" data-photo-hint data-reveal data-reveal-delay="200">แตะกล้องเพื่อถ่ายรูปทีละใบ ครบ 3 ใบ</p>
+
+            <div class="polaroid-stack" data-photo-stack aria-hidden="true"></div>
+
+        </div>
+    </main>
+
+    <!--
+        Photo viewer (lightbox) — hidden until all 3 polaroids
+        have printed, at which point js/photo.js opens it
+        automatically with a scale/fade-in animation so the set
+        gets a proper "reveal". After that, tapping any printed
+        polaroid re-opens it at that photo. Prev/next cycle
+        through all 3; close via the × button, tapping the dark
+        backdrop, or Esc.
+    -->
+    <div class="photo-lightbox" data-photo-lightbox aria-hidden="true">
+        <button type="button" class="lightbox-backdrop" data-lightbox-close aria-label="ปิด"></button>
+        <div class="lightbox-content">
+            <button type="button" class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="ภาพก่อนหน้า">‹</button>
+            <figure class="lightbox-frame">
+                <img data-lightbox-img src="" alt="">
+            </figure>
+            <button type="button" class="lightbox-nav lightbox-next" data-lightbox-next aria-label="ภาพถัดไป">›</button>
+        </div>
+        <div class="lightbox-dots" data-lightbox-dots></div>
+        <button type="button" class="lightbox-close" data-lightbox-close aria-label="ปิด">×</button>
+    </div>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/animations.js"></script>
+    <script src="../js/password.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/photo.js"></script>
+</body>
+</html>
