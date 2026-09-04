@@ -123,3 +123,8 @@
 .quiz-finish {
     padding-top: var(--space-xs);
 }
+
+.quiz-score {
+    font-size: 0.95rem;
+    color: var(--color-muted);
+}

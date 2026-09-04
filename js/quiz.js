@@ -86,6 +86,15 @@ const Quiz = (() => {
     }
 
     function renderFinishCard() {
+        const total = QuizData.questions.length;
+        const score = QuizData.questions.reduce(
+            (count, q) => count + (answers[q.id] === q.correctAnswer ? 1 : 0),
+            0
+        );
+        const message =
+            (QuizData.resultMessages && QuizData.resultMessages[score]) ||
+            `ตอบถูก ${score} จาก ${total} ข้อ`;
+
         const block = document.createElement('div');
         block.className = 'quiz-question-block quiz-finish';
 
@@ -93,6 +102,11 @@ const Quiz = (() => {
         title.className = 'quiz-question';
         title.textContent = 'ขอบคุณที่ตอบทุกข้อเลยนะ 🤍';
         block.appendChild(title);
+
+        const scoreLine = document.createElement('p');
+        scoreLine.className = 'quiz-score';
+        scoreLine.textContent = `${score}/${total} ${message}`;
+        block.appendChild(scoreLine);
 
         // Default hand-off is back home — change data-nav-target
         // (or point it at a new page added to Navigation.PAGES)
