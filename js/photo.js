@@ -16,10 +16,13 @@
    ========================================================= */
 
 const PhotoBoothData = {
+    // Navigation.asset() resolves these correctly whether this page
+    // is currently running inside the SPA shell (index.html, at the
+    // root) or was opened directly out of /pages/.
     photos: [
-        { src: '../assets/images/photo-1.svg', alt: 'ภาพความทรงจำ 1' },
-        { src: '../assets/images/photo-2.svg', alt: 'ภาพความทรงจำ 2' },
-        { src: '../assets/images/photo-3.svg', alt: 'ภาพความทรงจำ 3' },
+        { src: Navigation.asset('assets/images/photo-1.svg'), alt: 'ภาพความทรงจำ 1' },
+        { src: Navigation.asset('assets/images/photo-2.svg'), alt: 'ภาพความทรงจำ 2' },
+        { src: Navigation.asset('assets/images/photo-3.svg'), alt: 'ภาพความทรงจำ 3' },
     ],
     // How each printed polaroid is nudged away from dead-center
     // so the 3 of them fan out instead of landing in one exact
@@ -56,6 +59,11 @@ const PhotoBooth = (() => {
     let lightboxDots = null;
     let lightboxIndex = 0;
 
+    // The lightbox's Escape/Arrow handling lives on `document`, so
+    // (like password.js's keyboard listener) it's bound at most once
+    // ever rather than once per visit to this page.
+    let isLightboxKeydownBound = false;
+
     function init() {
         cameraBtn = document.querySelector('[data-camera-btn]');
         stackHost = document.querySelector('[data-photo-stack]');
@@ -64,6 +72,12 @@ const PhotoBooth = (() => {
         if (!cameraBtn || !stackHost || typeof PhotoBoothData === 'undefined') {
             return; // not on the photo page, or data failed to load
         }
+
+        // Fresh visit — reset state left over from a previous time
+        // this page was shown.
+        isBusy = false;
+        printedCount = 0;
+        lightboxIndex = 0;
 
         cameraBtn.addEventListener('click', handleShutterPress);
         initLightbox();
@@ -116,6 +130,10 @@ const PhotoBooth = (() => {
     }
 
     function printOnePolaroid(photo, index, done) {
+        // If the person has navigated away mid-shot, stackHost will
+        // already be null (or detached) by the time this fires.
+        if (!stackHost || !document.body.contains(stackHost)) return;
+
         const layout = PhotoBoothData.layout[index] || { shift: 0, drop: 60, rot: 0 };
 
         const card = document.createElement('div');
@@ -205,7 +223,11 @@ const PhotoBooth = (() => {
         closeEls.forEach((el) => el.addEventListener('click', closeLightbox));
         if (prevBtn) prevBtn.addEventListener('click', () => showLightboxPhoto(lightboxIndex - 1, true));
         if (nextBtn) nextBtn.addEventListener('click', () => showLightboxPhoto(lightboxIndex + 1, true));
-        document.addEventListener('keydown', handleLightboxKeydown);
+
+        if (!isLightboxKeydownBound) {
+            isLightboxKeydownBound = true;
+            document.addEventListener('keydown', handleLightboxKeydown);
+        }
 
         buildLightboxDots();
     }
@@ -285,7 +307,3 @@ const PhotoBooth = (() => {
 
     return { init };
 })();
-
-document.addEventListener('DOMContentLoaded', () => {
-    PhotoBooth.init();
-});

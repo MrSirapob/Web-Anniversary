@@ -27,6 +27,12 @@ const Quiz = (() => {
             return; // not on the quiz page, or data failed to load
         }
 
+        // Fresh visit — reset state left over from a previous time
+        // this page was shown.
+        currentIndex = 0;
+        answers = {};
+        isBusy = false;
+
         renderProgressDots();
         renderQuestion(currentIndex);
     }
@@ -55,6 +61,11 @@ const Quiz = (() => {
     }
 
     function renderQuestion(index) {
+        // If the person has navigated away while the "picked" pause
+        // between questions was still pending, cardHost will already
+        // be null (or detached) by the time this fires.
+        if (!cardHost || !document.body.contains(cardHost)) return;
+
         const question = QuizData.questions[index];
         if (!question) {
             renderFinishCard();
@@ -175,7 +186,3 @@ const Quiz = (() => {
 
     return { init };
 })();
-
-document.addEventListener('DOMContentLoaded', () => {
-    Quiz.init();
-});

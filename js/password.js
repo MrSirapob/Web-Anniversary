@@ -20,6 +20,14 @@ const PasswordGate = (() => {
 
     let els = {};
 
+    // The site now runs as a single-page app, so this page can be
+    // revisited (e.g. the photo page's "กลับหน้าแรก" button) without
+    // a real reload. The keyboard listener lives on `document` and
+    // has nothing to naturally clean it up when its page's markup is
+    // swapped out, so it's only ever bound once here rather than
+    // once per visit.
+    let isKeyboardBound = false;
+
     function init() {
         els = {
             display: document.querySelector('[data-password-display]'),
@@ -33,6 +41,11 @@ const PasswordGate = (() => {
             // Not on the password page — nothing to do.
             return;
         }
+
+        // Fresh visit — reset any input left over from a previous
+        // time this page was shown.
+        currentInput = '';
+        isLocked = false;
 
         renderDots();
         bindKeypad();
@@ -70,7 +83,15 @@ const PasswordGate = (() => {
     }
 
     function bindKeyboard() {
+        if (isKeyboardBound) return;
+        isKeyboardBound = true;
+
         document.addEventListener('keydown', (event) => {
+            // Guards against this leftover listener still reacting
+            // to keystrokes after the person has navigated away from
+            // the password page (its markup, and els.keypad with it,
+            // no longer being part of the live document).
+            if (!els.keypad || !document.body.contains(els.keypad)) return;
             if (isLocked) return;
 
             if (/^[0-9]$/.test(event.key)) {

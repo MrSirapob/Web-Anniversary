@@ -7,62 +7,88 @@
     <link rel="stylesheet" href="css/style.css">
     <link rel="stylesheet" href="css/components.css">
     <link rel="stylesheet" href="css/responsive.css">
+    <link rel="stylesheet" href="css/chat.css">
+    <link rel="stylesheet" href="css/quiz.css">
+    <link rel="stylesheet" href="css/photo.css">
 </head>
 <body data-page="password">
     <!--
-        PAGE 1 — SECRET PASSWORD
-        Numeric keypad + password dots. Logic lives in js/password.js,
-        the password itself is set in PASSWORD_CONFIG at the top of
-        that file. On a correct password this hands off to
-        Navigation.goToPage('flower', ...).
+        SPA SHELL — this is now the single entry point for the
+        whole site. [data-app-root] below holds whichever page is
+        currently showing. Navigation.goToPage() (js/navigation.js)
+        fetches the next page's markup from pages/*.html, fades the
+        current content out, swaps the new markup in here, then
+        fades it back in — no full page reload happens after this
+        first load.
+
+        pages/*.html remain the place each page's content actually
+        lives (see README → "วิธีเพิ่มหน้าใหม่" for how to add a new
+        one) — they're just fetched as plain HTML fragments now
+        instead of being navigated to directly. All of the site's
+        CSS and JS is loaded once, right here, up front.
     -->
-    <main class="page">
-        <div class="page-content" data-page-content>
+    <div id="app" data-app-root>
 
-            <div class="illustration" data-reveal>
-                <img src="assets/icons/lock-illustration.svg" alt="กุญแจน่ารักที่ล็อกอยู่">
+        <!--
+            PAGE 1 — SECRET PASSWORD
+            Numeric keypad + password dots. Logic lives in js/password.js,
+            the password itself is set in PASSWORD_CONFIG at the top of
+            that file. On a correct password this hands off to
+            Navigation.goToPage('flower', ...).
+        -->
+        <main class="page">
+            <div class="page-content" data-page-content>
+
+                <div class="illustration" data-reveal>
+                    <img src="assets/icons/lock-illustration.svg" alt="กุญแจน่ารักที่ล็อกอยู่">
+                </div>
+
+                <h1 class="page-title" data-reveal data-reveal-delay="80">ใส่รหัสลับ</h1>
+
+                <div class="password-display" data-password-display data-reveal data-reveal-delay="140">
+                    <span class="password-dot"></span>
+                    <span class="password-dot"></span>
+                    <span class="password-dot"></span>
+                    <span class="password-dot"></span>
+                    <span class="password-dot"></span>
+                    <span class="password-dot"></span>
+                </div>
+
+                <p class="password-feedback" data-password-feedback role="status" aria-live="polite"></p>
+
+                <div class="keypad" data-keypad data-reveal data-reveal-delay="200">
+                    <button type="button" class="keypad-key" data-key="1">1</button>
+                    <button type="button" class="keypad-key" data-key="2">2</button>
+                    <button type="button" class="keypad-key" data-key="3">3</button>
+                    <button type="button" class="keypad-key" data-key="4">4</button>
+                    <button type="button" class="keypad-key" data-key="5">5</button>
+                    <button type="button" class="keypad-key" data-key="6">6</button>
+                    <button type="button" class="keypad-key" data-key="7">7</button>
+                    <button type="button" class="keypad-key" data-key="8">8</button>
+                    <button type="button" class="keypad-key" data-key="9">9</button>
+                    <span class="keypad-spacer" aria-hidden="true"></span>
+                    <button type="button" class="keypad-key" data-key="0">0</button>
+                    <button type="button" class="keypad-key keypad-key--action" data-key="back" aria-label="ลบตัวเลข">
+                        <svg class="keypad-key__icon" viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
+                            <path d="M9.5 5h10A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-10a1.5 1.5 0 0 1-1.19-.58L3 12l5.31-6.42A1.5 1.5 0 0 1 9.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
+                            <path d="M13.5 9.5 18 14M18 9.5l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
+                        </svg>
+                    </button>
+                </div>
+
             </div>
+        </main>
 
-            <h1 class="page-title" data-reveal data-reveal-delay="80">ใส่รหัสลับ</h1>
-
-            <div class="password-display" data-password-display data-reveal data-reveal-delay="140">
-                <span class="password-dot"></span>
-                <span class="password-dot"></span>
-                <span class="password-dot"></span>
-                <span class="password-dot"></span>
-                <span class="password-dot"></span>
-                <span class="password-dot"></span>
-            </div>
-
-            <p class="password-feedback" data-password-feedback role="status" aria-live="polite"></p>
-
-            <div class="keypad" data-keypad data-reveal data-reveal-delay="200">
-                <button type="button" class="keypad-key" data-key="1">1</button>
-                <button type="button" class="keypad-key" data-key="2">2</button>
-                <button type="button" class="keypad-key" data-key="3">3</button>
-                <button type="button" class="keypad-key" data-key="4">4</button>
-                <button type="button" class="keypad-key" data-key="5">5</button>
-                <button type="button" class="keypad-key" data-key="6">6</button>
-                <button type="button" class="keypad-key" data-key="7">7</button>
-                <button type="button" class="keypad-key" data-key="8">8</button>
-                <button type="button" class="keypad-key" data-key="9">9</button>
-                <span class="keypad-spacer" aria-hidden="true"></span>
-                <button type="button" class="keypad-key" data-key="0">0</button>
-                <button type="button" class="keypad-key keypad-key--action" data-key="back" aria-label="ลบตัวเลข">
-                    <svg class="keypad-key__icon" viewBox="0 0 24 24" width="22" height="22" fill="none" aria-hidden="true">
-                        <path d="M9.5 5h10A1.5 1.5 0 0 1 21 6.5v11a1.5 1.5 0 0 1-1.5 1.5h-10a1.5 1.5 0 0 1-1.19-.58L3 12l5.31-6.42A1.5 1.5 0 0 1 9.5 5Z" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/>
-                        <path d="M13.5 9.5 18 14M18 9.5l-4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/>
-                    </svg>
-                </button>
-            </div>
-
-
-        </div>
-    </main>
+    </div>
 
     <script src="js/navigation.js"></script>
     <script src="js/animations.js"></script>
     <script src="js/password.js"></script>
+    <script src="js/chat-data.js"></script>
+    <script src="js/chat.js"></script>
+    <script src="js/quiz-data.js"></script>
+    <script src="js/quiz.js"></script>
+    <script src="js/photo.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

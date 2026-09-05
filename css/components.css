@@ -269,11 +269,24 @@
     }
 }
 
-/* Whole-page fade used briefly by navigation.js just before
-   leaving for another page. */
-body.is-page-leaving .page {
+/* ---- SPA page transition ----
+   navigation.js swaps pages by fetching pages/*.html and
+   replacing the contents of [data-app-root] (#app in index.html)
+   instead of doing a full page reload. These two classes are
+   toggled on that container: `.is-leaving` fades/slides the
+   outgoing page out, then — once the new content is in place —
+   `.is-entering` starts the incoming page from the same hidden
+   state before being removed a frame later so it transitions
+   back to normal. Works the same regardless of which page's
+   markup is currently inside #app. */
+[data-app-root] {
+    transition: opacity var(--transition-normal), transform var(--transition-normal);
+}
+
+[data-app-root].is-leaving,
+[data-app-root].is-entering {
     opacity: 0;
-    transition: opacity var(--transition-normal);
+    transform: translateY(10px) scale(0.99);
 }
 
 /* Success unlock animation on the whole password page content */

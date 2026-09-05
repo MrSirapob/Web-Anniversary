@@ -38,10 +38,20 @@ const ChatStory = (() => {
             return; // not on the chat page, or data failed to load
         }
 
+        // Fresh visit — reset state left over from a previous time
+        // this page was shown.
+        isBusy = false;
+
         processNode(ChatStoryData.start);
     }
 
     function processNode(nodeId) {
+        // If the person has navigated away from this page while a
+        // typing/pause timer from the conversation was still
+        // pending, chatWindow will already be null (or detached) by
+        // the time this fires — bail out instead of touching it.
+        if (!chatWindow || !document.body.contains(chatWindow)) return;
+
         const node = ChatStoryData.nodes[nodeId];
         if (!node) return;
 
@@ -69,6 +79,8 @@ const ChatStory = (() => {
     }
 
     function showTyping(text, onDone) {
+        if (!chatWindow || !document.body.contains(chatWindow)) return;
+
         const typing = document.createElement('div');
         typing.className = 'chat-typing';
         typing.setAttribute('aria-label', 'กำลังพิมพ์...');
@@ -85,12 +97,15 @@ const ChatStory = (() => {
             typing.classList.remove('is-visible');
             window.setTimeout(() => {
                 typing.remove();
+                if (!chatWindow || !document.body.contains(chatWindow)) return;
                 onDone();
             }, 200);
         }, typingDuration(text));
     }
 
     function appendBubble(text, side) {
+        if (!chatWindow || !document.body.contains(chatWindow)) return;
+
         const bubble = document.createElement('div');
         bubble.className = `chat-bubble chat-bubble--${side}`;
         bubble.textContent = text;
@@ -205,7 +220,3 @@ const ChatStory = (() => {
 
     return { init };
 })();
-
-document.addEventListener('DOMContentLoaded', () => {
-    ChatStory.init();
-});
