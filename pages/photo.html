@@ -16,20 +16,23 @@
         questions are answered (Quiz hands off here via
         Navigation.goToPage('photo')). Shows just the heading
         and a tappable instant camera. Each tap plays a
-        shutter-flash animation and prints ONE polaroid — the
-        person taps the shutter 3 separate times to print all 3.
+        shutter-flash animation and prints ONE postcard — the
+        person taps the shutter 5 separate times to print all 5.
         The photos are NOT taken live, they're fixed images
         pulled from PhotoBoothData below. Once all 3 have
         printed, js/photo.js auto-opens the lightbox below with
         a zoom/fade reveal (also re-openable afterward by
-        tapping any printed polaroid).
+        tapping any printed postcard).
 
         To swap which photos print: edit the `src` values in
         js/photo.js (PhotoBoothData.photos), or simply replace
-        the files at assets/images/photo-1.svg / photo-2.svg /
-        photo-3.svg with real photos of the same filenames (any
+        the files at assets/images/photo-1.svg through
+        photo-5.svg with real photos of the same filenames (any
         image format works — just update the src if the
         extension changes). No other file needs to change.
+        Each photo also carries a `caption` string in the same
+        object — that's the line printed on its postcard and
+        shown again in the lightbox below it.
 
         Rendering/animation logic lives in js/photo.js. This
         file only holds the empty camera + print-stack shell
@@ -58,19 +61,19 @@
                 </button>
             </div>
 
-            <p class="photo-hint" data-photo-hint data-reveal data-reveal-delay="200">แตะกล้องเพื่อถ่ายรูปทีละใบ ครบ 3 ใบ</p>
+            <p class="photo-hint" data-photo-hint data-reveal data-reveal-delay="200">แตะกล้องเพื่อถ่ายรูปทีละใบ ครบ 5 ใบ</p>
 
-            <div class="polaroid-stack" data-photo-stack aria-hidden="true"></div>
+            <div class="postcard-stack" data-photo-stack aria-hidden="true"></div>
 
         </div>
     </main>
 
     <!--
-        Photo viewer (lightbox) — hidden until all 3 polaroids
+        Photo viewer (lightbox) — hidden until all 5 postcards
         have printed, at which point js/photo.js opens it
         automatically with a scale/fade-in animation so the set
         gets a proper "reveal". After that, tapping any printed
-        polaroid re-opens it at that photo. Prev/next cycle
+        postcard re-opens it at that photo. Prev/next cycle
         through all 3; close via the × button, tapping the dark
         backdrop, or Esc.
     -->
@@ -80,6 +83,7 @@
             <button type="button" class="lightbox-nav lightbox-prev" data-lightbox-prev aria-label="ภาพก่อนหน้า">‹</button>
             <figure class="lightbox-frame">
                 <img data-lightbox-img src="" alt="">
+                <figcaption class="lightbox-caption" data-lightbox-caption></figcaption>
             </figure>
             <button type="button" class="lightbox-nav lightbox-next" data-lightbox-next aria-label="ภาพถัดไป">›</button>
         </div>

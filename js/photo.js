@@ -19,18 +19,25 @@ const PhotoBoothData = {
     // Navigation.asset() resolves these correctly whether this page
     // is currently running inside the SPA shell (index.html, at the
     // root) or was opened directly out of /pages/.
+    // `caption` is the short line printed on each postcard (and
+    // shown again in the lightbox) — edit these to whatever each
+    // photo actually means to you.
     photos: [
-        { src: Navigation.asset('assets/images/photo-1.svg'), alt: 'ภาพความทรงจำ 1' },
-        { src: Navigation.asset('assets/images/photo-2.svg'), alt: 'ภาพความทรงจำ 2' },
-        { src: Navigation.asset('assets/images/photo-3.svg'), alt: 'ภาพความทรงจำ 3' },
+        { src: Navigation.asset('assets/images/photo-1.svg'), alt: 'ภาพความทรงจำ 1', caption: 'ความทรงจำแรกของเรา' },
+        { src: Navigation.asset('assets/images/photo-2.svg'), alt: 'ภาพความทรงจำ 2', caption: 'วันที่เราหัวเราะด้วยกัน' },
+        { src: Navigation.asset('assets/images/photo-3.svg'), alt: 'ภาพความทรงจำ 3', caption: 'และวันนี้ ที่ยังมีกันและกัน' },
+        { src: Navigation.asset('assets/images/photo-4.svg'), alt: 'ภาพความทรงจำ 4', caption: 'ทุกช่วงเวลาที่เดินไปด้วยกัน' },
+        { src: Navigation.asset('assets/images/photo-5.svg'), alt: 'ภาพความทรงจำ 5', caption: 'และอีกหลายวันดีๆ ที่กำลังจะมาถึง' },
     ],
-    // How each printed polaroid is nudged away from dead-center
-    // so the 3 of them fan out instead of landing in one exact
+    // How each printed postcard is nudged away from dead-center
+    // so the 5 of them fan out instead of landing in one exact
     // pile. One entry per photo, matched by index.
     layout: [
-        { shift: -58, drop: 44, rot: -9 },
-        { shift: 10, drop: 78, rot: 3 },
-        { shift: 66, drop: 50, rot: 11 },
+        { shift: -100, drop: 34, rot: -11 },
+        { shift: -48, drop: 66, rot: -5 },
+        { shift: 8, drop: 84, rot: 2 },
+        { shift: 62, drop: 62, rot: 8 },
+        { shift: 108, drop: 32, rot: 13 },
     ],
 };
 
@@ -43,8 +50,10 @@ const PhotoBooth = (() => {
     // how many photos have printed so far (1-indexed by shots
     // taken). Falls back to a generic line if a count has none.
     const SHOT_HINTS = {
-        1: 'เหลืออีก 2 ใบ ถ่ายต่อเลย',
-        2: 'เหลืออีก 1 ใบ',
+        1: 'เหลืออีก 4 ใบ ถ่ายต่อเลย',
+        2: 'เหลืออีก 3 ใบ',
+        3: 'เหลืออีก 2 ใบ',
+        4: 'เหลืออีก 1 ใบ',
     };
 
     let cameraBtn = null;
@@ -56,6 +65,7 @@ const PhotoBooth = (() => {
     // Lightbox elements + state
     let lightbox = null;
     let lightboxImg = null;
+    let lightboxCaption = null;
     let lightboxDots = null;
     let lightboxIndex = 0;
 
@@ -108,7 +118,7 @@ const PhotoBooth = (() => {
             return;
         }
 
-        printOnePolaroid(photo, index, () => {
+        printOnePostcard(photo, index, () => {
             printedCount += 1;
             isBusy = false;
 
@@ -129,7 +139,7 @@ const PhotoBooth = (() => {
         window.setTimeout(() => overlay.remove(), FLASH_HOLD_MS + 160);
     }
 
-    function printOnePolaroid(photo, index, done) {
+    function printOnePostcard(photo, index, done) {
         // If the person has navigated away mid-shot, stackHost will
         // already be null (or detached) by the time this fires.
         if (!stackHost || !document.body.contains(stackHost)) return;
@@ -137,7 +147,7 @@ const PhotoBooth = (() => {
         const layout = PhotoBoothData.layout[index] || { shift: 0, drop: 60, rot: 0 };
 
         const card = document.createElement('div');
-        card.className = 'polaroid';
+        card.className = 'postcard';
         card.style.setProperty('--shift', `${layout.shift}px`);
         card.style.setProperty('--drop', `${layout.drop}px`);
         card.style.setProperty('--rot', `${layout.rot}deg`);
@@ -147,10 +157,27 @@ const PhotoBooth = (() => {
         // bring the hovered print to the front of the stack.
         card.style.setProperty('--stack-order', String(index + 1));
 
+        const frame = document.createElement('div');
+        frame.className = 'postcard-photo-frame';
+
         const img = document.createElement('img');
         img.src = photo.src;
         img.alt = photo.alt || 'ภาพความทรงจำ';
-        card.appendChild(img);
+        frame.appendChild(img);
+
+        const stamp = document.createElement('span');
+        stamp.className = 'postcard-stamp';
+        stamp.setAttribute('aria-hidden', 'true');
+        frame.appendChild(stamp);
+
+        card.appendChild(frame);
+
+        if (photo.caption) {
+            const caption = document.createElement('p');
+            caption.className = 'postcard-caption';
+            caption.textContent = photo.caption;
+            card.appendChild(caption);
+        }
 
         // Tappable once developed — reopens the lightbox at this
         // photo. Guarded on the class so a tap mid-print (while
@@ -215,6 +242,7 @@ const PhotoBooth = (() => {
         if (!lightbox) return;
 
         lightboxImg = lightbox.querySelector('[data-lightbox-img]');
+        lightboxCaption = lightbox.querySelector('[data-lightbox-caption]');
         lightboxDots = lightbox.querySelector('[data-lightbox-dots]');
         const prevBtn = lightbox.querySelector('[data-lightbox-prev]');
         const nextBtn = lightbox.querySelector('[data-lightbox-next]');
@@ -273,16 +301,20 @@ const PhotoBooth = (() => {
             // invisible, then fade the new one back in — avoids an
             // abrupt jump-cut when moving between photos.
             lightboxImg.classList.add('is-switching');
+            if (lightboxCaption) lightboxCaption.classList.add('is-switching');
             window.setTimeout(() => {
                 lightboxImg.src = photo.src;
                 lightboxImg.alt = photo.alt || 'ภาพความทรงจำ';
+                if (lightboxCaption) lightboxCaption.textContent = photo.caption || '';
                 window.requestAnimationFrame(() => {
                     lightboxImg.classList.remove('is-switching');
+                    if (lightboxCaption) lightboxCaption.classList.remove('is-switching');
                 });
             }, 180);
         } else {
             lightboxImg.src = photo.src;
             lightboxImg.alt = photo.alt || 'ภาพความทรงจำ';
+            if (lightboxCaption) lightboxCaption.textContent = photo.caption || '';
         }
 
         updateLightboxDots();
