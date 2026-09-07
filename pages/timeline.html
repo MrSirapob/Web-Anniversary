@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>เวลาของเรา — Anniversary</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/timeline.css">
+</head>
+<body data-page="timeline">
+    <!--
+        PAGE 6 — TIMELINE
+        Reached from the Photo Booth page's "ไปต่อ →" button once
+        all 5 postcards have printed (js/photo.js hands off here
+        via Navigation.goToPage('timeline')). Shows a small photo
+        collage, then a live, calendar-accurate counter of how
+        long the couple has been together. About
+        TimelineData.envelopeDelayMs (default 5s) after the page
+        loads, an envelope fades in below the counter — tapping it
+        plays an open animation and reveals the full letter in an
+        overlay (closable via ×, the dark backdrop, or Esc, and
+        re-openable afterward by tapping the envelope again).
+
+        To change the start date, collage photos, envelope delay,
+        or the letter's text: edit js/timeline-data.js only.
+        Rendering/animation logic lives in js/timeline.js — this
+        file only holds the empty shell that script renders into.
+    -->
+    <main class="page">
+        <div class="page-content" data-page-content>
+
+            <h1 class="page-title" data-reveal>เวลาที่เรามีให้กัน</h1>
+
+            <div class="timeline-collage" data-timeline-collage data-reveal data-reveal-delay="100" aria-hidden="true"></div>
+
+            <p class="timeline-caption" data-reveal data-reveal-delay="180">คบกันมาแล้ว</p>
+
+            <div class="timeline-counter" data-reveal data-reveal-delay="240">
+                <div class="counter-unit">
+                    <span class="counter-value" data-counter="years">0</span>
+                    <span class="counter-label">ปี</span>
+                </div>
+                <div class="counter-unit">
+                    <span class="counter-value" data-counter="months">0</span>
+                    <span class="counter-label">เดือน</span>
+                </div>
+                <div class="counter-unit">
+                    <span class="counter-value" data-counter="days">0</span>
+                    <span class="counter-label">วัน</span>
+                </div>
+                <div class="counter-unit counter-unit--time">
+                    <span class="counter-value" data-counter="hours">00</span>
+                    <span class="counter-label">ชม.</span>
+                </div>
+                <div class="counter-unit counter-unit--time">
+                    <span class="counter-value" data-counter="minutes">00</span>
+                    <span class="counter-label">นาที</span>
+                </div>
+                <div class="counter-unit counter-unit--time">
+                    <span class="counter-value" data-counter="seconds">00</span>
+                    <span class="counter-label">วินาที</span>
+                </div>
+            </div>
+
+            <div class="envelope-wrap" data-envelope-wrap>
+                <button type="button" class="envelope" data-envelope-btn aria-label="แตะเพื่อเปิดจดหมาย">
+                    <span class="envelope-letter" aria-hidden="true"></span>
+                    <span class="envelope-back" aria-hidden="true"></span>
+                    <span class="envelope-flap" aria-hidden="true"></span>
+                    <span class="envelope-heart" aria-hidden="true">♥</span>
+                </button>
+                <p class="envelope-hint" data-envelope-hint>แตะซองจดหมาย</p>
+            </div>
+
+        </div>
+    </main>
+
+    <!--
+        Letter overlay — hidden until the envelope is tapped.
+        Styled to echo the photo page's lightbox (same backdrop +
+        centered card + × / backdrop / Esc close pattern) so the
+        two feel like the same site.
+    -->
+    <div class="letter-overlay" data-letter-overlay aria-hidden="true">
+        <button type="button" class="letter-backdrop" data-letter-close aria-label="ปิด"></button>
+        <div class="letter-paper">
+            <p class="letter-text" data-letter-text></p>
+            <button type="button" class="letter-close" data-letter-close aria-label="ปิด">×</button>
+        </div>
+    </div>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/animations.js"></script>
+    <script src="../js/password.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/timeline-data.js"></script>
+    <script src="../js/timeline.js"></script>
+</body>
+</html>

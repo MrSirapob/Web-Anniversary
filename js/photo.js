@@ -206,7 +206,7 @@ const PhotoBooth = (() => {
     function finishSession() {
         cameraBtn.disabled = true;
         if (hint) hint.textContent = 'ภาพความทรงจำของเรา 🤍';
-        showHomeButton();
+        showNextButton();
 
         // The "big reveal" — open the viewer on the full set once
         // all 3 have printed, after a short beat so it doesn't
@@ -214,18 +214,22 @@ const PhotoBooth = (() => {
         window.setTimeout(() => openLightbox(0), 550);
     }
 
-    function showHomeButton() {
-        if (document.querySelector('[data-photo-home-btn]')) return;
+    // Hands off to the timeline page (pages/timeline.html) once all
+    // photos have printed — change the goToPage target here (or
+    // point it at a new page added to Navigation.PAGES) if the
+    // photo booth should lead somewhere else later.
+    function showNextButton() {
+        if (document.querySelector('[data-photo-next-btn]')) return;
 
         const btn = document.createElement('button');
         btn.type = 'button';
-        btn.className = 'btn btn-primary photo-home-btn';
-        btn.dataset.photoHomeBtn = '';
-        btn.textContent = 'กลับหน้าแรก';
+        btn.className = 'btn btn-primary photo-next-btn';
+        btn.dataset.photoNextBtn = '';
+        btn.textContent = 'ไปต่อ →';
         btn.addEventListener('click', () => {
             if (typeof Navigation === 'undefined') return;
             btn.disabled = true;
-            Navigation.goToPage('home');
+            Navigation.goToPage('timeline');
         });
 
         stackHost.insertAdjacentElement('afterend', btn);

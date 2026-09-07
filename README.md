@@ -18,7 +18,9 @@ pages/page3.html (บทสนทนาแบบแชท พร้อมตั�
       ↓ จบบทสนทนา
 pages/quiz.html (คำถามท้ายเรื่อง 3 ข้อ)
       ↓ ตอบครบ กดปุ่ม "ไปต่อ →"
-pages/photo.html (กล้องโพลารอยด์ — แตะแล้วปริ้นภาพ 3 ใบ)
+pages/photo.html (กล้องโพลารอยด์ — แตะแล้วปริ้นภาพ 5 ใบ)
+      ↓ ปริ้นครบ กดปุ่ม "ไปต่อ →"
+pages/timeline.html (นับเวลาที่คบกัน + ซองจดหมาย)
 ```
 
 ## สถาปัตยกรรม SPA
@@ -57,14 +59,16 @@ anniversary-web/
 │   ├── flower.html       เนื้อหาหน้าช่อดอกไม้ (fetch เข้า index.html โดย navigation.js)
 │   ├── page3.html        เนื้อหาหน้าบทสนทนาแบบแชท (Chat Story)
 │   ├── quiz.html         เนื้อหาหน้าคำถามท้ายเรื่อง
-│   └── photo.html        เนื้อหาหน้ากล้องโพลารอยด์
+│   ├── photo.html        เนื้อหาหน้ากล้องโพลารอยด์
+│   └── timeline.html     เนื้อหาหน้านับเวลาที่คบกัน + ซองจดหมาย
 ├── css/
 │   ├── style.css         CSS variables, typography, base
 │   ├── components.css    Keypad, ปุ่ม, password display, SPA transition, ฯลฯ
 │   ├── responsive.css    Breakpoint: mobile / tablet / desktop
 │   ├── chat.css          สไตล์ UI แชท — ใช้เมื่อหน้า page3 แสดงอยู่
 │   ├── quiz.css          สไตล์ UI quiz — ใช้เมื่อหน้า quiz แสดงอยู่
-│   └── photo.css         สไตล์ UI photo booth — ใช้เมื่อหน้า photo แสดงอยู่
+│   ├── photo.css         สไตล์ UI photo booth — ใช้เมื่อหน้า photo แสดงอยู่
+│   └── timeline.css      สไตล์ UI นับเวลา + ซองจดหมาย — ใช้เมื่อหน้า timeline แสดงอยู่
 ├── js/
 │   ├── main.js           Entry point เดียว — เรียกตอนโหลดครั้งแรก และหลัง SPA สลับหน้าทุกครั้ง
 │   ├── password.js        Logic ของหน้ารหัสลับทั้งหมด
@@ -74,9 +78,11 @@ anniversary-web/
 │   ├── chat.js            Engine ที่ render แชทจาก chat-data.js — ใช้เมื่อหน้า page3 แสดงอยู่
 │   ├── quiz-data.js       คำถาม/ตัวเลือก/เฉลย ของหน้า quiz
 │   ├── quiz.js            Engine ที่ render quiz จาก quiz-data.js — ใช้เมื่อหน้า quiz แสดงอยู่
-│   └── photo.js           รายชื่อรูป + Engine ปริ้นโพลารอยด์ — ใช้เมื่อหน้า photo แสดงอยู่
+│   ├── photo.js           รายชื่อรูป + Engine ปริ้นโพลารอยด์ — ใช้เมื่อหน้า photo แสดงอยู่
+│   ├── timeline-data.js   วันที่เริ่มคบกัน / รูปคอลลาจ / ข้อความจดหมาย ของหน้า timeline
+│   └── timeline.js        Engine นับเวลา + เปิดซองจดหมาย จาก timeline-data.js — ใช้เมื่อหน้า timeline แสดงอยู่
 ├── assets/
-│   ├── images/            รูปที่ใช้ในหน้า photo.html (photo-1/2/3 — แทนที่ได้เลย)
+│   ├── images/            รูปที่ใช้ในหน้า photo.html และ timeline.html (photo-1..5 — แทนที่ได้เลย)
 │   ├── icons/              ไอคอน/ภาพประกอบ เช่น lock-illustration.svg
 │   ├── flowers/             ภาพช่อดอกไม้ เช่น bouquet.svg
 │   └── audio/               เพลง/เสียงประกอบ (ยังว่าง)
@@ -167,6 +173,25 @@ const ChatStoryData = {
   ตัวเอง)
 - ไม่ต้องแก้ `pages/photo.html` หรือ Engine ใน `js/photo.js` เพื่อแค่เปลี่ยนรูป
 
+## วิธีแก้ไขหน้านับเวลา (Timeline)
+
+หน้า `pages/timeline.html` แสดงรูปคอลลาจเล็ก ๆ ด้านบน ต่อด้วยตัวนับเวลาแบบละเอียด (ปี/เดือน/วัน/
+ชม./นาที/วินาที) ที่นับขึ้นเรื่อย ๆ แบบ real-time ว่าคบกันมานานแค่ไหนแล้ว นับจากวันที่กำหนดใน
+`TimelineData.startDate` จากนั้นอีกประมาณ 5 วินาที (`TimelineData.envelopeDelayMs`) จะมีซอง
+จดหมายค่อย ๆ ปรากฏขึ้นใต้ตัวนับ พอแตะซอง ฝาซองจะเปิดพร้อมอนิเมชันจดหมายเลื่อนขึ้น แล้วข้อความเต็ม
+จะเปิดขึ้นมาเป็น overlay (ปิดได้ด้วยปุ่ม ×, แตะพื้นหลังมืด ๆ, หรือกด Esc — เหมือนกับ lightbox ของ
+หน้ารูปถ่าย) และหลังจากนั้นแตะที่ซองอีกครั้งก็เปิดอ่านจดหมายซ้ำได้เสมอ
+
+- **เปลี่ยนวันที่เริ่มคบกัน**: แก้ `TimelineData.startDate` ใน `js/timeline-data.js` เป็น
+  `new Date(ปี ค.ศ., เดือน - 1, วัน)` — ปีต้องเป็น ค.ศ. (พ.ศ. ลบ 543) และเดือนเริ่มนับที่ 0
+  (0 = มกราคม)
+- **เปลี่ยนรูปคอลลาจ**: แก้ `TimelineData.collagePhotos` ใน `js/timeline-data.js` (แนะนำให้ใช้
+  3 รูป เพื่อให้ fan-out สวยตามที่ออกแบบไว้ใน `css/timeline.css`)
+- **เปลี่ยนระยะเวลาก่อนซองจดหมายจะปรากฏ**: แก้ `TimelineData.envelopeDelayMs` (หน่วยมิลลิวินาที)
+- **เปลี่ยนข้อความในจดหมาย**: แก้ `TimelineData.letterText` ใน `js/timeline-data.js` — เว้นบรรทัด
+  ว่างเพื่อขึ้นย่อหน้าใหม่ได้เลย
+- ไม่ต้องแก้ `pages/timeline.html` หรือ Engine ใน `js/timeline.js` เพื่อแค่เปลี่ยนเนื้อหาข้างต้น
+
 ## วิธีเพิ่มหน้าใหม่
 
 1. สร้างไฟล์ใหม่ใน `pages/` เช่น `pages/page4.html` (คัดลอกโครงจาก `pages/page3.html` แล้วแก้เนื้อหา
@@ -244,5 +269,5 @@ Animation ที่ใช้ซ้ำได้อยู่ใน `js/animations.
 - Listener ที่ผูกกับ `document` ตรง ๆ (ไม่ใช่ element ในหน้า) ต้องผูกครั้งเดียวเท่านั้น (ดูตัวอย่าง
   `isKeyboardBound` ใน `password.js`) ไม่งั้นจะผูกซ้ำทุกครั้งที่กลับมาหน้านั้น
 - แก้เฉพาะส่วนที่เกี่ยวข้องกับ Feature ที่กำลังทำ อย่าลบ/แก้ระบบเดิมโดยไม่จำเป็น
-- ยังไม่มี Content ของ Page 4 เป็นต้นไป (Memories, Photo Gallery, Timeline, Special Message,
+- ยังไม่มี Content ของหน้าหลัง Timeline (Memories, Photo Gallery เพิ่มเติม, Special Message,
   Anniversary Ending) — ให้เพิ่มตามขั้นตอนใน "วิธีเพิ่มหน้าใหม่" ด้านบน เมื่อพร้อมพัฒนาแต่ละหน้า

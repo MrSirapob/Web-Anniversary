@@ -301,14 +301,14 @@
 }
 
 /* Button that appears once all 3 postcards have printed */
-.photo-home-btn {
+.photo-next-btn {
     margin-top: var(--space-sm);
     opacity: 0;
     transform: translateY(10px);
     transition: opacity var(--transition-normal), transform var(--transition-normal);
 }
 
-.photo-home-btn.is-visible {
+.photo-next-btn.is-visible {
     opacity: 1;
     transform: translateY(0);
 }

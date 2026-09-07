@@ -24,6 +24,7 @@ const Main = (() => {
         if (typeof ChatStory !== 'undefined') ChatStory.init();
         if (typeof Quiz !== 'undefined') Quiz.init();
         if (typeof PhotoBooth !== 'undefined') PhotoBooth.init();
+        if (typeof Timeline !== 'undefined') Timeline.init();
 
         bindNavButtons();
     }

@@ -1,0 +1,282 @@
+/* =========================================================
+   timeline.css
+   Page-timeline-only styles. Loaded only by pages/timeline.html,
+   so no other page is affected by anything in this file. The
+   envelope is drawn entirely with CSS (no image asset needed),
+   same approach photo.css takes with the camera, so its colors
+   stay in sync with the site's design tokens.
+   ========================================================= */
+
+/* ---- Photo collage ---- */
+.timeline-collage {
+    display: flex;
+    justify-content: center;
+    height: clamp(64px, 13dvh, 96px);
+    margin-bottom: var(--space-xs);
+}
+
+.timeline-collage-frame {
+    width: clamp(56px, 11dvh, 84px);
+    aspect-ratio: 1 / 1;
+    margin-left: -14px;
+    padding: 4px;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-soft);
+    /* Fans the stack out around the middle photo. Uses nth-child
+       (not a calc() on --collage-index) so it works everywhere,
+       including browsers without support for CSS's abs(). */
+    transform: rotate(calc((var(--collage-index) - 1) * 8deg));
+    transition: transform 220ms ease;
+}
+
+.timeline-collage-frame:first-child {
+    margin-left: 0;
+    transform: rotate(-8deg) translateY(6px);
+}
+
+.timeline-collage-frame:nth-child(3) {
+    transform: rotate(8deg) translateY(6px);
+}
+
+.timeline-collage-frame:hover {
+    transform: translateY(-6px) rotate(0deg);
+    z-index: 1;
+}
+
+.timeline-collage-frame img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2px;
+}
+
+.timeline-caption {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+/* ---- Detailed counter ---- */
+.timeline-counter {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--space-xs) var(--space-sm);
+    width: 100%;
+    padding: var(--space-sm);
+    background-color: var(--color-surface);
+    border-radius: var(--radius-md);
+    box-shadow: var(--shadow-softer);
+}
+
+.counter-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+}
+
+.counter-value {
+    font-family: var(--font-display);
+    font-size: clamp(1.3rem, 4dvh, 1.7rem);
+    font-weight: 600;
+    color: var(--color-text);
+    font-variant-numeric: tabular-nums;
+}
+
+/* The hh/mm/ss row reads slightly smaller so it doesn't compete
+   visually with "how many years/months/days", which matters more
+   at a glance than the live-ticking seconds do. */
+.counter-unit--time .counter-value {
+    font-size: clamp(1.1rem, 3.2dvh, 1.4rem);
+    color: var(--color-secondary);
+}
+
+.counter-label {
+    font-size: 0.75rem;
+    color: var(--color-muted);
+}
+
+/* ---- Envelope ---- */
+.envelope-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-xs);
+    margin-top: var(--space-xs);
+    /* Hidden until js/timeline.js adds .is-visible, ~5s after the
+       page loads (TimelineData.envelopeDelayMs). */
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+.envelope-wrap.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
+.envelope {
+    position: relative;
+    width: clamp(120px, 24dvh, 168px);
+    aspect-ratio: 3 / 2;
+    padding: 0;
+    transition: transform 220ms ease;
+}
+
+.envelope:active:not(:disabled) {
+    transform: scale(0.96);
+}
+
+@media (hover: hover) {
+    .envelope:hover:not(:disabled) {
+        transform: translateY(-4px);
+    }
+}
+
+.envelope-back {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background-color: var(--color-surface);
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow-soft);
+}
+
+/* The little letter card tucked inside the envelope — peeks out
+   and slides up once the flap opens. */
+.envelope-letter {
+    position: absolute;
+    left: 10%;
+    right: 10%;
+    top: 14%;
+    height: 60%;
+    z-index: 2;
+    background-color: #FFFFFF;
+    border-radius: 3px;
+    box-shadow: 0 4px 10px rgba(74, 64, 56, 0.12);
+    transform: translateY(0);
+    transition: transform 500ms cubic-bezier(0.22, 1, 0.36, 1) 120ms;
+}
+
+.envelope.is-open .envelope-letter {
+    transform: translateY(-58%);
+}
+
+/* Triangular flap, drawn with borders, folded down over the top
+   half of the envelope by default. */
+.envelope-flap {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    z-index: 3;
+    height: 0;
+    border-left: calc(clamp(120px, 24dvh, 168px) / 2) solid transparent;
+    border-right: calc(clamp(120px, 24dvh, 168px) / 2) solid transparent;
+    border-top: calc(clamp(120px, 24dvh, 168px) * 2 / 3 * 0.62) solid var(--color-primary);
+    transform-origin: top center;
+    transition: transform 380ms ease;
+}
+
+.envelope.is-open .envelope-flap {
+    transform: rotateX(180deg);
+}
+
+.envelope-heart {
+    position: absolute;
+    top: 30%;
+    left: 50%;
+    z-index: 4;
+    transform: translate(-50%, -50%);
+    color: var(--color-surface);
+    font-size: 1.1rem;
+    line-height: 1;
+    transition: opacity 200ms ease;
+}
+
+.envelope.is-open .envelope-heart {
+    opacity: 0;
+}
+
+.envelope-hint {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+/* ---- Letter overlay ----
+   Mirrors the photo page's lightbox (fixed backdrop + centered
+   card, opacity/visibility so both directions animate, ×/backdrop
+   /Esc close) so the two feel like the same site. */
+.letter-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-sm);
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+    transition: opacity 320ms ease, visibility 0s linear 320ms;
+}
+
+.letter-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+    pointer-events: auto;
+    transition: opacity 320ms ease, visibility 0s linear 0s;
+}
+
+.letter-backdrop {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(74, 64, 56, 0.55);
+    backdrop-filter: blur(2px);
+}
+
+.letter-paper {
+    position: relative;
+    z-index: 1;
+    width: min(84vw, 340px);
+    max-height: 80dvh;
+    overflow-y: auto;
+    padding: var(--space-md) var(--space-sm);
+    background-color: #FFFFFF;
+    border-radius: var(--radius-sm);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.28);
+    transform: scale(0.85) translateY(18px);
+    transition: transform 420ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.letter-overlay.is-open .letter-paper {
+    transform: scale(1) translateY(0);
+}
+
+.letter-text {
+    margin: 0;
+    max-width: none;
+    white-space: pre-line;
+    text-align: left;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    line-height: 1.7;
+    color: var(--color-text);
+}
+
+.letter-close {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: var(--radius-round);
+    background: transparent;
+    color: var(--color-muted);
+    font-size: 1.4rem;
+    line-height: 1;
+}

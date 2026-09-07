@@ -24,6 +24,7 @@ const Navigation = (() => {
         page3: 'pages/page3.html',
         quiz: 'pages/quiz.html',
         photo: 'pages/photo.html',
+        timeline: 'pages/timeline.html',
     };
 
     // True only if this script happens to be running from a page
