@@ -222,10 +222,23 @@
     transform: translateY(0);
 }
 
-/* ---- Flower / bouquet section ---- */
+/* ---- Flower / bouquet section ----
+   Height-bounded box (not just width-capped) with object-fit:
+   contain on the img, so this works the same whether the source
+   is a small square illustration or a tall portrait photo — the
+   image always scales to fit without cropping or distorting, and
+   never blows past the available screen height. */
 .flower-bouquet {
     width: 100%;
     max-width: 280px;
+    height: clamp(180px, 36dvh, 320px);
+    margin-inline: auto;
+}
+
+.flower-bouquet img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
 }
 
 /* ---- Placeholder page card (page3 and future pages) ---- */

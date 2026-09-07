@@ -1,0 +1,115 @@
+/* =========================================================
+   flower.css
+   Page-flower-only decorative effects. Loaded only by
+   pages/flower.html, so no other page is affected by anything
+   in this file. Everything here is ambient decoration drawn
+   entirely with CSS (no JS, no extra image assets) — same
+   approach page3's .chat-decor hearts take, just adapted for a
+   bouquet instead of a chat window.
+   ========================================================= */
+
+/* Positioned context for the decor layer below, and z-index so
+   the bouquet/title/button always paint above it — mirrors
+   chat.css's .chat-window/.chat-options z-index: 1 pattern. */
+body[data-page="flower"] .page {
+    position: relative;
+    overflow: hidden;
+}
+
+body[data-page="flower"] .page-content {
+    position: relative;
+    z-index: 1;
+}
+
+/* ---- Soft glow behind the bouquet ---- */
+.flower-bouquet {
+    position: relative;
+}
+
+.flower-bouquet::before {
+    content: '';
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 130%;
+    aspect-ratio: 1 / 1;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(circle, rgba(231, 184, 190, 0.35) 0%, rgba(231, 184, 190, 0) 70%);
+    animation: flowerGlowPulse 4s ease-in-out infinite;
+    z-index: -1;
+}
+
+@keyframes flowerGlowPulse {
+    0%, 100% { opacity: 0.6; transform: translate(-50%, -50%) scale(0.94); }
+    50% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+}
+
+/* ---- Drifting petals + sparkles ----
+   Ambient background layer, sits behind .page-content (z-index: 0
+   vs. 1) and never intercepts clicks. */
+.flower-decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.flower-decor-petal {
+    position: absolute;
+    top: -10%;
+    color: var(--color-primary);
+    opacity: 0;
+    font-size: 1.2rem;
+    animation: flowerPetalFall 11s ease-in infinite;
+}
+
+.flower-decor-petal--1 { left: 8%; animation-delay: 0s; font-size: 1.3rem; }
+.flower-decor-petal--2 { left: 80%; animation-delay: 2.4s; font-size: 1rem; color: var(--color-accent); }
+.flower-decor-petal--3 { left: 46%; animation-delay: 4.8s; font-size: 1.1rem; }
+.flower-decor-petal--4 { left: 90%; animation-delay: 7.2s; font-size: 0.9rem; color: var(--color-secondary); }
+.flower-decor-petal--5 { left: 20%; animation-delay: 9s; font-size: 1rem; color: var(--color-accent); }
+
+@keyframes flowerPetalFall {
+    0% { transform: translateY(0) translateX(0) rotate(0deg); opacity: 0; }
+    8% { opacity: 0.55; }
+    50% { transform: translateY(48dvh) translateX(14px) rotate(160deg); }
+    92% { opacity: 0.35; }
+    100% { transform: translateY(102dvh) translateX(-10px) rotate(320deg); opacity: 0; }
+}
+
+.flower-decor-sparkle {
+    position: absolute;
+    color: var(--color-accent);
+    opacity: 0;
+    font-size: 0.9rem;
+    animation: flowerSparkleTwinkle 3.2s ease-in-out infinite;
+}
+
+.flower-decor-sparkle--1 { left: 16%; top: 28%; animation-delay: 0.3s; }
+.flower-decor-sparkle--2 { right: 14%; top: 20%; animation-delay: 1.4s; font-size: 0.75rem; }
+.flower-decor-sparkle--3 { right: 22%; bottom: 30%; animation-delay: 2.3s; font-size: 0.8rem; }
+
+@keyframes flowerSparkleTwinkle {
+    0%, 100% { opacity: 0; transform: scale(0.6); }
+    50% { opacity: 0.9; transform: scale(1); }
+}
+
+/* People who've asked for less motion still get the (subtle,
+   static-cost-only) glow, but not the continuously-moving petals
+   and sparkles. */
+@media (prefers-reduced-motion: reduce) {
+    .flower-decor-petal,
+    .flower-decor-sparkle {
+        animation: none;
+        opacity: 0;
+    }
+
+    .flower-bouquet::before {
+        animation: none;
+    }
+
+    .flower-bouquet.is-floating {
+        animation: none;
+    }
+}

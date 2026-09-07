@@ -65,6 +65,7 @@ anniversary-web/
 │   ├── style.css         CSS variables, typography, base
 │   ├── components.css    Keypad, ปุ่ม, password display, SPA transition, ฯลฯ
 │   ├── responsive.css    Breakpoint: mobile / tablet / desktop
+│   ├── flower.css        เอฟเฟกต์ตกแต่งหน้าช่อดอกไม้ (ลอย/แสงเรือง/กลีบ/ประกาย) — ใช้เมื่อหน้า flower แสดงอยู่
 │   ├── chat.css          สไตล์ UI แชท — ใช้เมื่อหน้า page3 แสดงอยู่
 │   ├── quiz.css          สไตล์ UI quiz — ใช้เมื่อหน้า quiz แสดงอยู่
 │   ├── photo.css         สไตล์ UI photo booth — ใช้เมื่อหน้า photo แสดงอยู่
@@ -122,10 +123,29 @@ const PASSWORD_CONFIG = {
 
 - **รูปหน้ารหัสลับ**: แทนที่ไฟล์ `assets/icons/lock-illustration.svg` ด้วยรูปใหม่ (จะเป็น .svg, .png,
   หรือ .jpg ก็ได้ แค่แก้ path ใน `<img src="...">` ที่ `index.html`)
-- **ช่อดอกไม้**: แทนที่ `assets/flowers/bouquet.svg` ด้วยรูปจริง แล้วแก้ path ใน `pages/flower.html`
-  ถ้ารูปใหม่มีสัดส่วนต่างจากเดิมมาก อาจต้องปรับ `.flower-bouquet` ใน `css/components.css` เล็กน้อย
+- **ช่อดอกไม้**: ตอนนี้ใช้ `assets/flowers/flower.png` (แก้ path ใน `pages/flower.html` ถ้าจะเปลี่ยน
+  ไฟล์อื่น) กล่องรูปที่ `.flower-bouquet` ใน `css/components.css` ปรับสัดส่วนให้อัตโนมัติอยู่แล้ว
+  (`object-fit: contain`) ใช้ได้ทั้งรูปแนวตั้ง แนวนอน หรือภาพประกอบสี่เหลี่ยมจัตุรัสแบบเดิม
+  (`assets/flowers/bouquet.svg`) โดยไม่ต้องแก้ CSS เพิ่ม
 
 ไม่ต้องแก้ JavaScript ใด ๆ เพื่อเปลี่ยนรูป — แก้แค่ path ใน HTML หรือแทนที่ไฟล์ในชื่อเดิมก็พอ
+
+## วิธีแก้ไขเอฟเฟกต์หน้าดอกไม้ (Flower)
+
+หน้า `pages/flower.html` มีเอฟเฟกต์ตกแต่งที่เป็น CSS ล้วน ไม่มี JS เลย (`css/flower.css`):
+ช่อดอกไม้ลอยขึ้นลงเบา ๆ ต่อเนื่อง (คลาส `.is-floating`, ใช้ keyframe เดียวกับที่อื่นในโปรเจกต์),
+มีแสงเรืองนุ่ม ๆ เต้นเบา ๆ อยู่ด้านหลังช่อดอกไม้ และมีกลีบดอกไม้ (❀) ลอยร่วงลงมาเป็นจังหวะ พร้อม
+ประกายวิบวับ (✦ ✧) แทรกอยู่รอบ ๆ พื้นหลัง — ทั้งหมดไม่บังหรือกันการกดปุ่มใด ๆ (`pointer-events: none`)
+
+- **ปรับความถี่/ความช้าเร็วของกลีบดอกไม้**: แก้ `animation-delay` ของแต่ละ `.flower-decor-petal--N`
+  หรือความยาว `11s` ใน `@keyframes flowerPetalFall` ที่ `css/flower.css`
+- **เพิ่ม/ลดจำนวนกลีบหรือประกาย**: เพิ่ม/ลบ `<span class="flower-decor-petal ...">` หรือ
+  `<span class="flower-decor-sparkle ...">` ใน `pages/flower.html` แล้วเพิ่มคลาสตำแหน่ง
+  (`--6`, `--7`, ...) คู่กันใน `css/flower.css`
+- **ปิดเอฟเฟกต์ลอย/แสงเรือง**: ลบคลาส `is-floating` ออกจาก `.flower-bouquet` ใน `pages/flower.html`
+  หรือลบ `.flower-bouquet::before` ใน `css/flower.css`
+- ผู้ใช้ที่ตั้งค่า "ลดการเคลื่อนไหว" (`prefers-reduced-motion`) จะไม่เห็นกลีบ/ประกายลอย และไม่มี
+  อนิเมชันลอยขึ้นลงหรือแสงเรืองเต้น — ตั้งไว้ให้อัตโนมัติแล้วใน `css/flower.css`, ไม่ต้องทำอะไรเพิ่ม
 
 ## วิธีแก้ไขบทสนทนาในหน้า 3 (Chat Story)
 

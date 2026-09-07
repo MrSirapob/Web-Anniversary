@@ -7,20 +7,43 @@
     <link rel="stylesheet" href="../css/style.css">
     <link rel="stylesheet" href="../css/components.css">
     <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/flower.css">
 </head>
 <body data-page="flower">
     <!--
         PAGE 2 — FLOWER
-        Shown right after the password gate unlocks. Bouquet image
-        lives at assets/flowers/bouquet.svg — swap the file (or the
-        src below) to use a real photo/illustration later. The
-        "ไปต่อ →" button hands off to Navigation.goToPage('page3').
+        Shown right after the password gate unlocks. Photo lives at
+        assets/flowers/flower.png — swap the file (or the src below)
+        to change it later; .flower-bouquet in css/components.css
+        scales/fits any image (square illustration or tall photo)
+        without cropping, via object-fit: contain. The "ไปต่อ →"
+        button hands off to Navigation.goToPage('page3').
+
+        Decorative effects (glow behind the bouquet, drifting
+        petals, twinkling sparkles) are pure CSS, no JS — all live
+        in css/flower.css and never need this file to change. The
+        floating bouquet motion reuses the shared .is-floating
+        class from components.css (same one used for hero
+        illustrations elsewhere).
     -->
     <main class="page">
+        <div class="flower-decor" aria-hidden="true">
+            <span class="flower-decor-petal flower-decor-petal--1">❀</span>
+            <span class="flower-decor-petal flower-decor-petal--2">❀</span>
+            <span class="flower-decor-petal flower-decor-petal--3">❀</span>
+            <span class="flower-decor-petal flower-decor-petal--4">❀</span>
+            <span class="flower-decor-petal flower-decor-petal--5">❀</span>
+            <span class="flower-decor-sparkle flower-decor-sparkle--1">✦</span>
+            <span class="flower-decor-sparkle flower-decor-sparkle--2">✧</span>
+            <span class="flower-decor-sparkle flower-decor-sparkle--3">✦</span>
+        </div>
+
         <div class="page-content" data-page-content>
 
-            <div class="flower-bouquet" data-reveal>
-                <img src="../assets/flowers/bouquet.svg" alt="ช่อดอกไม้พาสเทล">
+            <div class="flower-bouquet-wrap" data-reveal>
+                <div class="flower-bouquet is-floating">
+                    <img src="../assets/flowers/flower.png" alt="ช่อดอกไม้">
+                </div>
             </div>
 
             <h1 class="page-title" data-reveal data-reveal-delay="120">มอบให้สำหรับคนน่ารัก</h1>
