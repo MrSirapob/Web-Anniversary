@@ -111,7 +111,7 @@ const Quiz = (() => {
 
         const title = document.createElement('h2');
         title.className = 'quiz-question';
-        title.textContent = 'ขอบคุณที่ตอบทุกข้อเลยนะ 🤍';
+        title.textContent = 'ตอบครบทุกข้อแล้ว';
         block.appendChild(title);
 
         const scoreLine = document.createElement('p');

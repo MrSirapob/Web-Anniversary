@@ -10,7 +10,7 @@
 
 // Change the password or its length here — nowhere else.
 const PASSWORD_CONFIG = {
-    password: '123456',
+    password: '090964',
     maxLength: 6,
 };
 
