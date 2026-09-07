@@ -57,43 +57,91 @@
     font-size: 0.9rem;
 }
 
-/* ---- Detailed counter ---- */
+/* ---- Detailed counter ----
+   Two visual groups: years/months/days as three even chips, and
+   hours:minutes:seconds styled like a small digital clock with
+   colon separators. Each number gets its own "chip" (background +
+   shadow) instead of sitting bare on the card, so the whole thing
+   reads as a proper counter rather than plain stacked labels. */
 .timeline-counter {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: var(--space-xs) var(--space-sm);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: var(--space-sm);
     width: 100%;
-    padding: var(--space-sm);
+    padding: var(--space-md) var(--space-sm);
     background-color: var(--color-surface);
-    border-radius: var(--radius-md);
+    border-radius: var(--radius-lg);
     box-shadow: var(--shadow-softer);
+}
+
+.counter-group {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-xs);
+    width: 100%;
+}
+
+/* Extra gap before the divider, plus the divider itself, so the
+   date group visually separates from the live hh:mm:ss clock
+   below without needing a caption between them. */
+.counter-group--date {
+    gap: clamp(8px, 2.4dvw, 14px);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid rgba(74, 64, 56, 0.08);
 }
 
 .counter-unit {
     display: flex;
     flex-direction: column;
     align-items: center;
+    justify-content: center;
     gap: 2px;
+    flex: 1;
+    min-width: 0;
+    padding: clamp(8px, 1.8dvh, 12px) 4px;
+    background-color: var(--color-bg);
+    border-radius: var(--radius-md);
 }
 
 .counter-value {
     font-family: var(--font-display);
-    font-size: clamp(1.3rem, 4dvh, 1.7rem);
+    font-size: clamp(1.3rem, 4.4dvh, 1.8rem);
     font-weight: 600;
     color: var(--color-text);
     font-variant-numeric: tabular-nums;
+    line-height: 1.1;
 }
 
-/* The hh/mm/ss row reads slightly smaller so it doesn't compete
-   visually with "how many years/months/days", which matters more
-   at a glance than the live-ticking seconds do. */
+/* The hh:mm:ss row is the "live clock" half of the counter — a
+   soft accent tint sets it apart from the static years/months/days
+   chips above, and the colon between each chip is what reads as a
+   clock instead of three more unrelated boxes. */
+.counter-unit--time {
+    background-color: var(--color-bg);
+    background-image: linear-gradient(180deg, rgba(195, 182, 222, 0.16), rgba(195, 182, 222, 0));
+}
+
 .counter-unit--time .counter-value {
-    font-size: clamp(1.1rem, 3.2dvh, 1.4rem);
+    font-size: clamp(1.2rem, 3.8dvh, 1.6rem);
     color: var(--color-secondary);
 }
 
+.counter-colon {
+    font-family: var(--font-display);
+    font-size: clamp(1.1rem, 3.4dvh, 1.4rem);
+    font-weight: 600;
+    color: var(--color-muted);
+    line-height: 1.1;
+    align-self: center;
+    /* Sits a touch above the numerals' baseline so it lines up
+       optically with the digits rather than the labels below. */
+    transform: translateY(-8px);
+}
+
 .counter-label {
-    font-size: 0.75rem;
+    font-size: 0.72rem;
     color: var(--color-muted);
 }
 

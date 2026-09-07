@@ -44,29 +44,36 @@
             <p class="timeline-caption" data-reveal data-reveal-delay="180">คบกันมาแล้ว</p>
 
             <div class="timeline-counter" data-reveal data-reveal-delay="240">
-                <div class="counter-unit">
-                    <span class="counter-value" data-counter="years">0</span>
-                    <span class="counter-label">ปี</span>
+                <div class="counter-group counter-group--date">
+                    <div class="counter-unit">
+                        <span class="counter-value" data-counter="years">0</span>
+                        <span class="counter-label">ปี</span>
+                    </div>
+                    <div class="counter-unit">
+                        <span class="counter-value" data-counter="months">0</span>
+                        <span class="counter-label">เดือน</span>
+                    </div>
+                    <div class="counter-unit">
+                        <span class="counter-value" data-counter="days">0</span>
+                        <span class="counter-label">วัน</span>
+                    </div>
                 </div>
-                <div class="counter-unit">
-                    <span class="counter-value" data-counter="months">0</span>
-                    <span class="counter-label">เดือน</span>
-                </div>
-                <div class="counter-unit">
-                    <span class="counter-value" data-counter="days">0</span>
-                    <span class="counter-label">วัน</span>
-                </div>
-                <div class="counter-unit counter-unit--time">
-                    <span class="counter-value" data-counter="hours">00</span>
-                    <span class="counter-label">ชม.</span>
-                </div>
-                <div class="counter-unit counter-unit--time">
-                    <span class="counter-value" data-counter="minutes">00</span>
-                    <span class="counter-label">นาที</span>
-                </div>
-                <div class="counter-unit counter-unit--time">
-                    <span class="counter-value" data-counter="seconds">00</span>
-                    <span class="counter-label">วินาที</span>
+
+                <div class="counter-group counter-group--time">
+                    <div class="counter-unit counter-unit--time">
+                        <span class="counter-value" data-counter="hours">00</span>
+                        <span class="counter-label">ชม.</span>
+                    </div>
+                    <span class="counter-colon" aria-hidden="true">:</span>
+                    <div class="counter-unit counter-unit--time">
+                        <span class="counter-value" data-counter="minutes">00</span>
+                        <span class="counter-label">นาที</span>
+                    </div>
+                    <span class="counter-colon" aria-hidden="true">:</span>
+                    <div class="counter-unit counter-unit--time">
+                        <span class="counter-value" data-counter="seconds">00</span>
+                        <span class="counter-label">วินาที</span>
+                    </div>
                 </div>
             </div>
 
