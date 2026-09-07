@@ -21,6 +21,8 @@ pages/quiz.html (คำถามท้ายเรื่อง 3 ข้อ)
 pages/photo.html (กล้องโพลารอยด์ — แตะแล้วปริ้นภาพ 5 ใบ)
       ↓ ปริ้นครบ กดปุ่ม "ไปต่อ →"
 pages/timeline.html (นับเวลาที่คบกัน + ซองจดหมาย)
+      ↓ อ่านจดหมายจบครั้งแรก กดปุ่ม "ยังมีอีกอย่างให้ดูนะ →"
+pages/gift.html (ข้อความขึ้นกลางจอ ตามด้วยกล่องของขวัญให้แตะเปิด)
 ```
 
 ## สถาปัตยกรรม SPA
@@ -60,7 +62,8 @@ anniversary-web/
 │   ├── page3.html        เนื้อหาหน้าบทสนทนาแบบแชท (Chat Story)
 │   ├── quiz.html         เนื้อหาหน้าคำถามท้ายเรื่อง
 │   ├── photo.html        เนื้อหาหน้ากล้องโพลารอยด์
-│   └── timeline.html     เนื้อหาหน้านับเวลาที่คบกัน + ซองจดหมาย
+│   ├── timeline.html     เนื้อหาหน้านับเวลาที่คบกัน + ซองจดหมาย
+│   └── gift.html         เนื้อหาหน้าของขวัญ (ข้อความกลางจอ + กล่องให้แตะเปิด)
 ├── css/
 │   ├── style.css         CSS variables, typography, base
 │   ├── components.css    Keypad, ปุ่ม, password display, SPA transition, ฯลฯ
@@ -69,7 +72,8 @@ anniversary-web/
 │   ├── chat.css          สไตล์ UI แชท — ใช้เมื่อหน้า page3 แสดงอยู่
 │   ├── quiz.css          สไตล์ UI quiz — ใช้เมื่อหน้า quiz แสดงอยู่
 │   ├── photo.css         สไตล์ UI photo booth — ใช้เมื่อหน้า photo แสดงอยู่
-│   └── timeline.css      สไตล์ UI นับเวลา + ซองจดหมาย — ใช้เมื่อหน้า timeline แสดงอยู่
+│   ├── timeline.css      สไตล์ UI นับเวลา + ซองจดหมาย — ใช้เมื่อหน้า timeline แสดงอยู่
+│   └── gift.css          สไตล์กล่องของขวัญ + ข้อความกลางจอ — ใช้เมื่อหน้า gift แสดงอยู่
 ├── js/
 │   ├── main.js           Entry point เดียว — เรียกตอนโหลดครั้งแรก และหลัง SPA สลับหน้าทุกครั้ง
 │   ├── password.js        Logic ของหน้ารหัสลับทั้งหมด
@@ -81,7 +85,8 @@ anniversary-web/
 │   ├── quiz.js            Engine ที่ render quiz จาก quiz-data.js — ใช้เมื่อหน้า quiz แสดงอยู่
 │   ├── photo.js           รายชื่อรูป + Engine ปริ้นโพลารอยด์ — ใช้เมื่อหน้า photo แสดงอยู่
 │   ├── timeline-data.js   วันที่เริ่มคบกัน / รูปคอลลาจ / ข้อความจดหมาย ของหน้า timeline
-│   └── timeline.js        Engine นับเวลา + เปิดซองจดหมาย จาก timeline-data.js — ใช้เมื่อหน้า timeline แสดงอยู่
+│   ├── timeline.js        Engine นับเวลา + เปิดซองจดหมาย จาก timeline-data.js — ใช้เมื่อหน้า timeline แสดงอยู่
+│   └── gift.js            Engine ข้อความกลางจอ + เปิดกล่องของขวัญ — ใช้เมื่อหน้า gift แสดงอยู่
 ├── assets/
 │   ├── images/            รูปที่ใช้ในหน้า photo.html และ timeline.html (photo-1..5 — แทนที่ได้เลย)
 │   ├── icons/              ไอคอน/ภาพประกอบ เช่น lock-illustration.svg
@@ -212,6 +217,25 @@ const ChatStoryData = {
   ว่างเพื่อขึ้นย่อหน้าใหม่ได้เลย
 - ไม่ต้องแก้ `pages/timeline.html` หรือ Engine ใน `js/timeline.js` เพื่อแค่เปลี่ยนเนื้อหาข้างต้น
 
+## วิธีแก้ไขหน้าของขวัญ (Gift)
+
+หน้า `pages/gift.html` เปิดมาด้วยข้อความตัวใหญ่กลางจอ ("มีของขวัญให้เธอด้วยยย") ค้างไว้สักครู่แล้ว
+เฟดหายไป จากนั้นกล่องของขวัญ (วาดด้วย CSS ล้วน ผูกโบว์ + มีช่อดอกไม้จาก `assets/flowers/bouquet.svg`
+ซ่อนอยู่ข้างใน) จะค่อย ๆ ขยายเข้ามาแทนที่ตรงจุดเดิม พอแตะกล่อง ฝาจะเปิดเด้งหลุดออกไปพร้อมช่อดอกไม้
+ที่ลอยขึ้นมาแทนที่ พร้อมเอฟเฟกต์หัวใจฟุ้ง (ใช้ `Animations.burstHearts` ตัวเดียวกับตอนใส่รหัสถูก)
+แล้วข้อความปิดท้ายจะเฟดขึ้นมาด้านล่าง
+
+- **เปลี่ยนข้อความตัวใหญ่ตอนเปิด / ข้อความปิดท้าย**: แก้ข้อความใน `[data-gift-intro]` /
+  `[data-gift-caption]` ที่ `pages/gift.html` ได้ตรง ๆ (ไม่มีไฟล์ data แยกเหมือนหน้าอื่น เพราะ
+  หน้านี้ไม่มีอะไรต้องแตกแขนงหรือวนซ้ำ)
+- **เปลี่ยนระยะเวลาที่ข้อความตัวใหญ่ค้างอยู่ก่อนกล่องจะโผล่**: แก้ `INTRO_HOLD_MS` ที่
+  `js/gift.js`
+- **เปลี่ยนดอกไม้ในกล่อง**: แก้ `src` ของ `<img>` ใน `.gift-box-flower` ที่ `pages/gift.html`
+  (ใช้ `assets/flowers/bouquet.svg` เป็นค่าเริ่มต้น จะเปลี่ยนเป็น `flower.png` หรือรูปอื่นก็ได้)
+- **เปลี่ยนสี/ขนาดกล่อง**: แก้ `.gift-box-body` / `.gift-box-lid` / `.gift-box-ribbon-v` ที่
+  `css/gift.css` (สีอ้างอิงตัวแปรจาก `css/style.css` เหมือนทุกหน้า)
+- ไม่ต้องแก้ `pages/gift.html` หรือ Engine ใน `js/gift.js` เพื่อแค่เปลี่ยนเนื้อหา/สีข้างต้น
+
 ## วิธีเพิ่มหน้าใหม่
 
 1. สร้างไฟล์ใหม่ใน `pages/` เช่น `pages/page4.html` (คัดลอกโครงจาก `pages/page3.html` แล้วแก้เนื้อหา
@@ -289,5 +313,6 @@ Animation ที่ใช้ซ้ำได้อยู่ใน `js/animations.
 - Listener ที่ผูกกับ `document` ตรง ๆ (ไม่ใช่ element ในหน้า) ต้องผูกครั้งเดียวเท่านั้น (ดูตัวอย่าง
   `isKeyboardBound` ใน `password.js`) ไม่งั้นจะผูกซ้ำทุกครั้งที่กลับมาหน้านั้น
 - แก้เฉพาะส่วนที่เกี่ยวข้องกับ Feature ที่กำลังทำ อย่าลบ/แก้ระบบเดิมโดยไม่จำเป็น
-- ยังไม่มี Content ของหน้าหลัง Timeline (Memories, Photo Gallery เพิ่มเติม, Special Message,
-  Anniversary Ending) — ให้เพิ่มตามขั้นตอนใน "วิธีเพิ่มหน้าใหม่" ด้านบน เมื่อพร้อมพัฒนาแต่ละหน้า
+- หน้า Gift (`pages/gift.html`) คือหน้าสุดท้ายในลำดับตอนนี้ (ต่อจาก Timeline) — ยังไม่มี Content
+  ของหน้าหลัง Gift (Memories เพิ่มเติม, Photo Gallery, Anniversary Ending ฯลฯ) ถ้าจะเพิ่มต่อ ให้ทำ
+  ตามขั้นตอนใน "วิธีเพิ่มหน้าใหม่" ด้านบน

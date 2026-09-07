@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>ของขวัญ — Anniversary</title>
+    <link rel="stylesheet" href="../css/style.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/responsive.css">
+    <link rel="stylesheet" href="../css/gift.css">
+</head>
+<body data-page="gift">
+    <!--
+        PAGE 7 — GIFT BOX
+        Reached from the Timeline page's "ยังมีอีกอย่างให้ดูนะ →"
+        button, which js/timeline.js reveals below the envelope
+        once the letter has been read once (data-nav-target="gift"
+        needs no extra JS — main.js binds it automatically).
+
+        Sequence, driven entirely by js/gift.js:
+          1. A big line fades in dead-center announcing there's a
+             gift too (data-gift-intro), typing itself in left to
+             right via Animations.revealTextByChar.
+          2. Once it's had its moment on screen, it fades back out
+             and a wrapped parcel scales/fades into the same spot
+             (data-gift-box-wrap / data-gift-box).
+          3. Tapping the box plays an opening animation — the lid
+             (+ bow) lifts off and drifts away while the bouquet
+             rises up out of the box — plus a little heart burst
+             (Animations.burstHearts, same one used on the
+             password page) and a closing caption takes over the
+             full screen, typing itself in left to right via
+             Animations.revealTextByChar.
+
+        Timings live at the top of js/gift.js; colors/shapes for
+        the box itself live in css/gift.css. This file only holds
+        the empty shell that script renders into — nothing here
+        should need to change to retime or reword any of it.
+    -->
+    <main class="page gift-page">
+        <div class="gift-decor" aria-hidden="true">
+            <span class="gift-decor-sparkle gift-decor-sparkle--1">✦</span>
+            <span class="gift-decor-sparkle gift-decor-sparkle--2">✧</span>
+            <span class="gift-decor-sparkle gift-decor-sparkle--3">✦</span>
+        </div>
+
+        <div class="page-content gift-content" data-page-content>
+
+            <div class="gift-stage" data-gift-stage>
+
+                <p class="gift-intro" data-gift-intro><span class="gift-intro-text" data-gift-intro-text>มีของขวัญให้เธอด้วยยย</span></p>
+
+                <div class="gift-box-wrap" data-gift-box-wrap>
+                    <button type="button" class="gift-box" data-gift-box aria-label="แตะเพื่อเปิดของขวัญ">
+                        <span class="gift-box-flower" aria-hidden="true">
+                            <img src="../assets/flowers/bouquet.svg" alt="">
+                        </span>
+                        <span class="gift-box-body" aria-hidden="true"></span>
+                        <span class="gift-box-ribbon-v" aria-hidden="true"></span>
+                        <span class="gift-box-lid" aria-hidden="true"></span>
+                        <span class="gift-box-bow" aria-hidden="true">🎀</span>
+                    </button>
+                    <p class="gift-hint" data-gift-hint>แกะกล่องขวัญของจริงก่อนนะ ค่อยกด</p>
+                </div>
+
+            </div>
+
+            <p class="gift-caption" data-gift-caption><span class="gift-caption-text" data-gift-caption-text>สุขสันต์วันครบรอบนะเธอ ขอให้เรารักกันแบบนี้ไปอีกนาน ๆ เลยนะ ❤️</span></p>
+
+        </div>
+    </main>
+
+    <script src="../js/navigation.js"></script>
+    <script src="../js/animations.js"></script>
+    <script src="../js/password.js"></script>
+    <script src="../js/main.js"></script>
+    <script src="../js/gift.js"></script>
+</body>
+</html>

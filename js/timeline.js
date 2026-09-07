@@ -25,6 +25,7 @@ const Timeline = (() => {
 
     let letterOverlay = null;
     let letterText = null;
+    let continueWrap = null;
 
     let counterInterval = null;
     let envelopeTimer = null;
@@ -54,6 +55,7 @@ const Timeline = (() => {
         };
         envelopeBtn = document.querySelector('[data-envelope-btn]');
         envelopeHint = document.querySelector('[data-envelope-hint]');
+        continueWrap = document.querySelector('[data-timeline-continue]');
 
         // Fresh visit — reset state/timers left over from a
         // previous time this page was shown, since the module
@@ -66,6 +68,9 @@ const Timeline = (() => {
         if (envelopeBtn) {
             envelopeBtn.classList.remove('is-open');
             envelopeBtn.disabled = false;
+        }
+        if (continueWrap) {
+            continueWrap.classList.remove('is-visible');
         }
 
         renderCollage();
@@ -212,6 +217,13 @@ const Timeline = (() => {
         if (!letterOverlay) return;
         letterOverlay.classList.remove('is-open');
         letterOverlay.setAttribute('aria-hidden', 'true');
+
+        // The letter's been read at least once now — reveal the
+        // way forward to the next page. Re-adding the class on
+        // every close is harmless once it's already visible.
+        if (hasOpenedEnvelope && continueWrap) {
+            continueWrap.classList.add('is-visible');
+        }
     }
 
     return { init };

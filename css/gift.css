@@ -1,0 +1,330 @@
+/* =========================================================
+   gift.css
+   Page-gift-only styles. Loaded only by pages/gift.html, so no
+   other page is affected by anything in this file. The parcel is
+   drawn entirely with CSS shapes (+ the existing bouquet.svg
+   asset for the flower inside) — no new image assets needed,
+   same approach timeline.css takes with its envelope.
+   ========================================================= */
+
+body[data-page="gift"] .page {
+    position: relative;
+    overflow: hidden;
+}
+
+.gift-content {
+    position: relative;
+    z-index: 1;
+    gap: var(--space-lg);
+}
+
+/* ---- Stage ----
+   Intro line and box share this one spot on screen — the intro
+   fades out before the box fades in, so they never have to be
+   laid out at the same time. Fixed min-height keeps the rest of
+   the page (the caption below) from jumping as the stage's
+   content changes. */
+.gift-stage {
+    position: relative;
+    width: 100%;
+    min-height: clamp(220px, 42dvh, 320px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ---- Step 1: the big centered line ---- */
+.gift-intro {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 0 var(--space-sm);
+    margin: 0;
+    max-width: none;
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.5rem, 6.4dvh, 2.3rem);
+    color: var(--color-text);
+    opacity: 0;
+    transform: scale(0.85) translateY(6px);
+    transition: opacity 550ms ease, transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gift-intro.is-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+}
+
+/* Fading back out to make way for the box — a bit quicker and
+   plainer than the entrance, so it reads as "stepping aside"
+   rather than a second flourish. */
+.gift-intro.is-leaving {
+    opacity: 0;
+    transform: scale(0.92) translateY(-14px);
+    transition: opacity 420ms ease, transform 420ms ease;
+}
+
+/* ---- Step 2: the box ---- */
+.gift-box-wrap {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: var(--space-sm);
+    opacity: 0;
+    transform: scale(0.8) translateY(14px);
+    pointer-events: none;
+    transition: opacity 550ms ease, transform 550ms cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+.gift-box-wrap.is-visible {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+    pointer-events: auto;
+}
+
+.gift-box {
+    position: relative;
+    width: clamp(150px, 32dvh, 210px);
+    height: clamp(150px, 32dvh, 210px);
+    padding: 0;
+    overflow: visible;
+    transition: transform 220ms ease;
+}
+
+@media (hover: hover) {
+    .gift-box:not(:disabled):hover {
+        transform: translateY(-4px);
+    }
+}
+
+.gift-box:active:not(:disabled) {
+    transform: scale(0.97);
+}
+
+/* A gentle continuous float while it's still waiting to be
+   opened — same idea as .is-floating elsewhere, just scoped here
+   since it needs to stop the moment the box opens. */
+.gift-box:not(.is-open):not(:disabled) {
+    animation: giftBoxFloat 3.6s ease-in-out infinite;
+}
+
+@keyframes giftBoxFloat {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-6px); }
+}
+
+.gift-box-body {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    height: 62%;
+    background-color: var(--color-primary);
+    border-radius: var(--radius-sm) var(--radius-sm) var(--radius-md) var(--radius-md);
+    box-shadow: var(--shadow-soft);
+    z-index: 1;
+}
+
+.gift-box-ribbon-v {
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    width: 16%;
+    height: 62%;
+    transform: translateX(-50%);
+    background-color: var(--color-surface);
+    opacity: 0.92;
+    z-index: 2;
+}
+
+/* Sits on top of the body with a small overhang on either side,
+   like a lid that's slightly wider than the box underneath it. */
+.gift-box-lid {
+    position: absolute;
+    left: -6%;
+    right: -6%;
+    bottom: 56%;
+    height: 30%;
+    background-color: var(--color-accent);
+    border-radius: var(--radius-md) var(--radius-md) 6px 6px;
+    box-shadow: var(--shadow-softer);
+    transform-origin: 50% 100%;
+    transition: transform 620ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 500ms ease;
+    z-index: 3;
+}
+
+.gift-box-bow {
+    position: absolute;
+    left: 50%;
+    bottom: 78%;
+    transform: translate(-50%, 0);
+    font-size: clamp(1.6rem, 5.2dvh, 2.3rem);
+    line-height: 1;
+    transition: transform 620ms cubic-bezier(0.34, 1.56, 0.64, 1), opacity 500ms ease;
+    z-index: 4;
+}
+
+/* Tucked down and invisible until opened — always painted above
+   everything else so it never needs a z-index fight with the lid
+   mid-transition, only a fade. */
+.gift-box-flower {
+    position: absolute;
+    left: 50%;
+    bottom: 30%;
+    width: 58%;
+    transform: translate(-50%, 30%) scale(0.55);
+    opacity: 0;
+    transition: transform 700ms cubic-bezier(0.34, 1.56, 0.64, 1) 150ms, opacity 550ms ease 150ms;
+    z-index: 5;
+}
+
+.gift-box-flower img {
+    width: 100%;
+    display: block;
+}
+
+/* ---- Open state ----
+   The lid and bow lift up and drift apart while fading out; the
+   flower rises to meet where the lid used to be. */
+.gift-box.is-open .gift-box-lid {
+    transform: translateY(-72%) rotate(-16deg);
+    opacity: 0;
+}
+
+.gift-box.is-open .gift-box-bow {
+    transform: translate(-50%, -170%) rotate(18deg);
+    opacity: 0;
+}
+
+.gift-box.is-open .gift-box-flower {
+    transform: translate(-50%, -55%) scale(1);
+    opacity: 1;
+}
+
+.gift-box:disabled {
+    cursor: default;
+}
+
+.gift-hint {
+    margin: 0;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+/* ---- Closing caption ----
+   Hidden until js/gift.js reveals it a moment after the box is
+   tapped, once the open animation has had a chance to start.
+   Rendered as a full-screen takeover (rather than inline text
+   under the box) so the message gets the whole stage to itself,
+   with Animations.revealTextByChar typing it in left to right. */
+.gift-caption {
+    position: fixed;
+    inset: 0;
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    margin: 0;
+    padding: var(--space-lg) var(--space-md);
+    background-color: var(--color-bg);
+    color: var(--color-text);
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: clamp(1.6rem, 6.2dvh, 2.6rem);
+    line-height: 1.6;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity var(--transition-slow);
+}
+
+/* The background/flex box fills the whole screen; this inner
+   wrapper is what actually caps line length, so the sentence
+   stays readable instead of stretching edge-to-edge. */
+.gift-caption-text {
+    display: inline-block;
+    max-width: 640px;
+    text-wrap: balance;
+}
+
+.gift-caption.is-visible {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+/* ---- Per-character reveal ----
+   Shared by the intro line and the closing caption below — each
+   grapheme starts invisible/slightly offset and animations.js
+   flips on .is-visible with an increasing delay per character, so
+   the sentence appears to type itself in from left to right. */
+.gift-intro .char,
+.gift-caption .char {
+    display: inline-block;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: opacity 260ms ease, transform 260ms ease;
+}
+
+.gift-intro .char.is-visible,
+.gift-caption .char.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.gift-intro .char--space,
+.gift-caption .char--space {
+    white-space: pre;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gift-intro .char,
+    .gift-caption .char {
+        transition: none;
+    }
+}
+
+/* ---- Ambient sparkles ----
+   Same drifting-twinkle approach as .flower-decor-sparkle on the
+   Flower page, just re-declared here so this file has no
+   dependency on flower.css being loaded. */
+.gift-decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+}
+
+.gift-decor-sparkle {
+    position: absolute;
+    color: var(--color-accent);
+    opacity: 0;
+    font-size: 0.9rem;
+    animation: giftSparkleTwinkle 3.2s ease-in-out infinite;
+}
+
+.gift-decor-sparkle--1 { left: 18%; top: 22%; animation-delay: 0.2s; }
+.gift-decor-sparkle--2 { right: 16%; top: 30%; animation-delay: 1.3s; font-size: 0.75rem; }
+.gift-decor-sparkle--3 { right: 24%; bottom: 26%; animation-delay: 2.4s; font-size: 0.8rem; }
+
+@keyframes giftSparkleTwinkle {
+    0%, 100% { opacity: 0; transform: scale(0.6); }
+    50% { opacity: 0.9; transform: scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .gift-decor-sparkle {
+        animation: none;
+        opacity: 0;
+    }
+
+    .gift-box:not(.is-open):not(:disabled) {
+        animation: none;
+    }
+}

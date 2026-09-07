@@ -207,6 +207,24 @@
     font-size: 0.85rem;
 }
 
+/* ---- Continue button ----
+   Hidden until js/timeline.js reveals it (after the letter has
+   been closed for the first time), same fade + slide-up pattern
+   as .envelope-wrap above so the two feel like one sequence. */
+.timeline-continue {
+    margin-top: var(--space-xs);
+    opacity: 0;
+    transform: translateY(10px);
+    pointer-events: none;
+    transition: opacity var(--transition-slow), transform var(--transition-slow);
+}
+
+.timeline-continue.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+    pointer-events: auto;
+}
+
 /* ---- Letter overlay ----
    Mirrors the photo page's lightbox (fixed backdrop + centered
    card, opacity/visibility so both directions animate, ×/backdrop

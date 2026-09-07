@@ -7,6 +7,61 @@
 
 const Animations = (() => {
     /**
+     * Splits text into user-perceived characters (graphemes) so
+     * Thai combining vowels/tone marks stay attached to their
+     * base consonant instead of being torn into their own span.
+     * Falls back to a plain code-point split on older browsers
+     * that lack Intl.Segmenter.
+     */
+    function splitGraphemes(text) {
+        if (typeof Intl !== 'undefined' && typeof Intl.Segmenter === 'function') {
+            const segmenter = new Intl.Segmenter(undefined, { granularity: 'grapheme' });
+            return Array.from(segmenter.segment(text), (s) => s.segment);
+        }
+        return Array.from(text);
+    }
+
+    /**
+     * Reveals an element's text one character at a time, left to
+     * right, by wrapping each grapheme in its own <span> and
+     * staggering when it fades/slides in. The element keeps its
+     * full original text as an aria-label so screen readers still
+     * hear it as one sentence instead of letter-by-letter.
+     *
+     * Safe to call more than once (e.g. re-entering a page) — it
+     * always rebuilds from the element's current text content.
+     */
+    function revealTextByChar(el, options = {}) {
+        if (!el) return;
+
+        const { stepMs = 35, startDelayMs = 0 } = options;
+        const fullText = el.dataset.revealText || el.textContent;
+        const chars = splitGraphemes(fullText);
+        const prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+        el.dataset.revealText = fullText;
+        el.setAttribute('aria-label', fullText);
+        el.textContent = '';
+
+        chars.forEach((ch, i) => {
+            const span = document.createElement('span');
+            span.className = 'char' + (ch.trim() === '' ? ' char--space' : '');
+            span.textContent = ch;
+            span.setAttribute('aria-hidden', 'true');
+            el.appendChild(span);
+
+            if (prefersReduced) {
+                span.classList.add('is-visible');
+                return;
+            }
+
+            window.setTimeout(() => {
+                span.classList.add('is-visible');
+            }, startDelayMs + i * stepMs);
+        });
+    }
+
+    /**
      * Reveals every [data-reveal] element on the page with a
      * gentle fade + slide-up, one after another. Each element
      * can set its own delay via data-reveal-delay (ms).
@@ -66,5 +121,6 @@ const Animations = (() => {
         revealOnLoad,
         enableFloating,
         burstHearts,
+        revealTextByChar,
     };
 })();

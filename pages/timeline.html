@@ -23,6 +23,12 @@
         overlay (closable via ×, the dark backdrop, or Esc, and
         re-openable afterward by tapping the envelope again).
 
+        Once the letter has been closed for the first time,
+        js/timeline.js fades in a "ไปต่อ →" button below the
+        envelope (data-timeline-continue) — data-nav-target="gift"
+        hands off to the new Gift page (pages/gift.html) with no
+        extra JS needed (main.js binds data-nav-target automatically).
+
         To change the start date, collage photos, envelope delay,
         or the letter's text: edit js/timeline-data.js only.
         Rendering/animation logic lives in js/timeline.js — this
@@ -72,6 +78,12 @@
                     <span class="envelope-heart" aria-hidden="true">♥</span>
                 </button>
                 <p class="envelope-hint" data-envelope-hint>แตะซองจดหมาย</p>
+            </div>
+
+            <div class="timeline-continue" data-timeline-continue>
+                <button type="button" class="btn btn-primary" data-nav-target="gift">
+                    ยังมีอีกอย่างให้ดูนะ →
+                </button>
             </div>
 
         </div>
