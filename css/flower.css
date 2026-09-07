@@ -113,3 +113,62 @@ body[data-page="flower"] .page-content {
         animation: none;
     }
 }
+
+/* ---- Livelier entrance ----
+   This is the very first thing people see right after the
+   password unlocks, so it gets its own bouncier entrance instead
+   of blending into the same plain fade-slide-up every other page
+   uses. Overrides the generic .fade-in-element animation from
+   components.css, scoped to this page only. */
+body[data-page="flower"] .flower-bouquet-wrap.fade-in-element.is-visible {
+    animation: flowerBouquetIn 750ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes flowerBouquetIn {
+    from {
+        opacity: 0;
+        transform: translateY(26px) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+body[data-page="flower"] .page-title.fade-in-element.is-visible {
+    animation: flowerTitleIn 650ms ease-out forwards;
+}
+
+@keyframes flowerTitleIn {
+    from {
+        opacity: 0;
+        transform: translateY(22px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+body[data-page="flower"] .btn-primary.fade-in-element.is-visible {
+    animation: flowerButtonIn 550ms cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+@keyframes flowerButtonIn {
+    from {
+        opacity: 0;
+        transform: translateY(16px) scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    body[data-page="flower"] .flower-bouquet-wrap.fade-in-element.is-visible,
+    body[data-page="flower"] .page-title.fade-in-element.is-visible,
+    body[data-page="flower"] .btn-primary.fade-in-element.is-visible {
+        animation: none;
+    }
+}
