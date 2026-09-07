@@ -28,10 +28,16 @@
     max-width: 480px;
     display: flex;
     flex-direction: column;
-    min-height: 100vh;
-    min-height: 100dvh;
+    /* Locked to a real height (not min-height) so this flex column
+       has a definite size for .chat-window's flex:1 to fill — that's
+       what lets .chat-window's overflow-y:auto actually kick in and
+       scroll internally, instead of the whole page just growing
+       taller and leaving auto-scroll with nothing to scroll. */
+    height: 100vh;
+    height: 100dvh;
     background-color: var(--color-bg);
     position: relative;
+    overflow: hidden;
 }
 
 @media (min-width: 768px) {
@@ -41,7 +47,7 @@
     }
 
     .chat-frame {
-        min-height: min(760px, 92dvh);
+        height: min(760px, 92dvh);
         border-radius: var(--radius-lg);
         box-shadow: var(--shadow-soft);
         overflow: hidden;
@@ -51,12 +57,25 @@
 /* ---- Scrollable message feed ---- */
 .chat-window {
     flex: 1;
+    /* Without this, a flex item's default min-height is "tall
+       enough to fit all its content" — so instead of shrinking to
+       .chat-frame's fixed height and scrolling internally, it just
+       keeps growing to fit every message, pushing the whole page
+       taller and bringing back an unwanted page-level scrollbar. */
+    min-height: 0;
     overflow-y: auto;
     display: flex;
     flex-direction: column;
     gap: var(--space-xs);
     padding: var(--space-lg) var(--space-sm) var(--space-md);
     scroll-behavior: smooth;
+    /* Scrolling still works, the bar itself is just hidden. */
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.chat-window::-webkit-scrollbar {
+    display: none;
 }
 
 /* ---- Message bubbles ---- */
