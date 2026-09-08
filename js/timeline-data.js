@@ -28,9 +28,7 @@ const TimelineData = {
     startDate: new Date(2021, 8, 9, 0, 0, 0),
 
     collagePhotos: [
-        { src: Navigation.asset('assets/images/photo-1.svg'), alt: 'ภาพความทรงจำ 1' },
-        { src: Navigation.asset('assets/images/photo-3.svg'), alt: 'ภาพความทรงจำ 3' },
-        { src: Navigation.asset('assets/images/photo-5.svg'), alt: 'ภาพความทรงจำ 5' },
+        { src: Navigation.asset('assets/images/photo-1.svg'), alt: 'ภาพความทรงจำ' },
     ],
 
     envelopeDelayMs: 5000,

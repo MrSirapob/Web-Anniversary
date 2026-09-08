@@ -63,7 +63,7 @@
        producing a vertical scrollbar, on short phones and tall
        screens alike. dvh falls back to vh automatically in any
        browser that doesn't support it. */
-    --hero-size: clamp(84px, 16dvh, 150px);
+    --hero-size: clamp(110px, 22dvh, 200px);
     --keypad-key-size: clamp(46px, 8dvh, 76px);
     --keypad-gap: clamp(8px, 1.6dvh, 16px);
     --stack-gap: clamp(10px, 2.2dvh, 24px);

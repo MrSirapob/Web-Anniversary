@@ -44,6 +44,19 @@
     z-index: 1;
 }
 
+/* Single-photo mode: TimelineData.collagePhotos has just one
+   entry, so skip the fanned/tilted stack look (built for 3
+   photos) and show it flat and centered instead. */
+.timeline-collage-frame:only-child {
+    width: clamp(72px, 14dvh, 104px);
+    margin-left: 0;
+    transform: none;
+}
+
+.timeline-collage-frame:only-child:hover {
+    transform: translateY(-6px);
+}
+
 .timeline-collage-frame img {
     width: 100%;
     height: 100%;

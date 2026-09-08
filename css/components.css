@@ -18,6 +18,10 @@
 .illustration svg {
     width: 100%;
     height: 100%;
+    /* object-fit was missing, so a non-square image (e.g. pic1.jpg)
+       got stretched to fill this square box instead of scaling
+       proportionally — that's the "squished vertically" look. */
+    object-fit: contain;
 }
 
 /* ---- Password display: a row of dots ---- */
@@ -230,8 +234,8 @@
    never blows past the available screen height. */
 .flower-bouquet {
     width: 100%;
-    max-width: 280px;
-    height: clamp(180px, 36dvh, 320px);
+    max-width: 340px;
+    height: clamp(240px, 50dvh, 440px);
     margin-inline: auto;
 }
 
