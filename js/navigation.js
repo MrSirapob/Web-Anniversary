@@ -179,8 +179,22 @@ const Navigation = (() => {
 
         appRoot.classList.add('is-leaving');
 
-        window.setTimeout(() => {
-            const swapIn = (contentHTML) => {
+        // Kick the fetch off right away, in parallel with the
+        // fade-out animation, instead of waiting for the transition
+        // to finish first. That way network latency overlaps with
+        // time the animation is taking anyway, rather than stacking
+        // on top of it — which is what made the wait noticeable on
+        // a real connection even though it's invisible on localhost.
+        const contentPromise = pageKey === 'home'
+            ? Promise.resolve(homeContentHTML)
+            : fetchPageContent(pageKey, target);
+
+        const transitionPromise = new Promise((resolve) => {
+            window.setTimeout(resolve, transitionMs);
+        });
+
+        Promise.all([contentPromise, transitionPromise])
+            .then(([contentHTML]) => {
                 appRoot.innerHTML = contentHTML;
                 document.body.dataset.page = pageKey === 'home' ? 'password' : pageKey;
 
@@ -202,24 +216,15 @@ const Navigation = (() => {
                 }
 
                 isTransitioning = false;
-            };
-
-            if (pageKey === 'home') {
-                swapIn(homeContentHTML);
-                return;
-            }
-
-            fetchPageContent(pageKey, target)
-                .then(swapIn)
-                .catch((err) => {
-                    console.error('Navigation: failed to load page', pageKey, err);
-                    // Degrade gracefully to a real navigation (e.g.
-                    // if the site is opened via file:// and fetch()
-                    // of local files isn't allowed) rather than
-                    // leaving the person stuck on a faded-out page.
-                    window.location.href = ROOT_PATH + target;
-                });
-        }, transitionMs);
+            })
+            .catch((err) => {
+                console.error('Navigation: failed to load page', pageKey, err);
+                // Degrade gracefully to a real navigation (e.g. if
+                // the site is opened via file:// and fetch() of
+                // local files isn't allowed) rather than leaving the
+                // person stuck on a faded-out page.
+                window.location.href = ROOT_PATH + target;
+            });
     }
 
     return {
