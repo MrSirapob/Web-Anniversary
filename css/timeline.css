@@ -11,7 +11,7 @@
 .timeline-collage {
     display: flex;
     justify-content: center;
-    height: clamp(64px, 13dvh, 96px);
+    height: clamp(150px, 32dvh, 280px);
     margin-bottom: var(--space-xs);
 }
 
@@ -48,7 +48,7 @@
    entry, so skip the fanned/tilted stack look (built for 3
    photos) and show it flat and centered instead. */
 .timeline-collage-frame:only-child {
-    width: clamp(72px, 14dvh, 104px);
+    width: clamp(150px, 32dvh, 280px);
     margin-left: 0;
     transform: none;
 }

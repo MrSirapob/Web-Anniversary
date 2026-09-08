@@ -103,7 +103,7 @@ const Gift = (() => {
 
         boxBtn.classList.add('is-open');
         boxBtn.disabled = true;
-        if (hintEl) hintEl.textContent = 'อย่าลืมแกะ กล่องของขวัญนะ';
+        if (hintEl) hintEl.textContent = 'แต่นน แต๊นนน';
 
         if (typeof Animations !== 'undefined') {
             Animations.burstHearts();

@@ -23,11 +23,11 @@ const PhotoBoothData = {
     // shown again in the lightbox) — edit these to whatever each
     // photo actually means to you.
     photos: [
-        { src: Navigation.asset('assets/images/pic2.jpg'), alt: 'ภาพความทรงจำ 1', caption: 'ความทรงจำแรกของเรา' },
-        { src: Navigation.asset('assets/images/pic3.jpg'), alt: 'ภาพความทรงจำ 2', caption: 'วันที่เราหัวเราะด้วยกัน' },
-        { src: Navigation.asset('assets/images/pic4.jpg'), alt: 'ภาพความทรงจำ 3', caption: 'และวันนี้ ที่ยังมีกันและกัน' },
-        { src: Navigation.asset('assets/images/pic5.jpg'), alt: 'ภาพความทรงจำ 4', caption: 'ทุกช่วงเวลาที่เดินไปด้วยกัน' },
-        { src: Navigation.asset('assets/images/pic6.jpg'), alt: 'ภาพความทรงจำ 5', caption: 'และอีกหลายวันดีๆ ที่กำลังจะมาถึง' },
+        { src: Navigation.asset('assets/images/pic2.jpg'), alt: 'ภาพความทรงจำ 1', caption: 'เป็นภาพแรกที่น่ารักมากก' },
+        { src: Navigation.asset('assets/images/pic3.jpg'), alt: 'ภาพความทรงจำ 2', caption: 'ภาพนี้เธอยิ้มน่ารัก ชอบบ' },
+        { src: Navigation.asset('assets/images/pic4.jpg'), alt: 'ภาพความทรงจำ 3', caption: 'เป็น 1 ในภาพที่ชอบที่สุดด ฟิลกู๊ดด' },
+        { src: Navigation.asset('assets/images/pic5.jpg'), alt: 'ภาพความทรงจำ 4', caption: 'แบ่งกล้ามโชว์ไป 1 ที' },
+        { src: Navigation.asset('assets/images/pic6.jpg'), alt: 'ภาพความทรงจำ 5', caption: 'Before ก่อนลุยปีนผา น่ากลัวมาก' },
     ],
     // How each printed postcard is nudged away from dead-center
     // so the 5 of them fan out instead of landing in one exact
